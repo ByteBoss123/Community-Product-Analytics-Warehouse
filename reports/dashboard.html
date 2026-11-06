@@ -1,0 +1,200 @@
+<title>Q&amp;A Launch Health</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column; findings first, then evidence panels, then contract (logging gaps, SLAs) */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --fg:#1c2230; --muted:#5d6678; --line:#dde1e8;
+  --accent:#2f5d8a; --accent-2:#c98a2b; --soft:#e8eef5; --good:#2e7d4f; --bad:#b4433a;
+  --f-display:"Newsreader",Georgia,serif; --f-body:"Instrument Sans",system-ui,sans-serif;
+  --f-data:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12161e; --surface:#1a1f2a; --fg:#e4e8ef; --muted:#9aa3b4; --line:#2c3342;
+  --accent:#7fa8d4; --accent-2:#e0aa55; --soft:#222a38; --good:#6cc08d; --bad:#e07c72; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161e; --surface:#1a1f2a; --fg:#e4e8ef; --muted:#9aa3b4; --line:#2c3342;
+  --accent:#7fa8d4; --accent-2:#e0aa55; --soft:#222a38; --good:#6cc08d; --bad:#e07c72; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:980px;margin:0 auto;padding-block:32px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:grid;gap:28px}
+h1,h2{font-family:var(--f-display);font-weight:600;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(28px,4.4vw,40px);line-height:1.1}
+h2{font-size:22px}
+.eyebrow{font-family:var(--f-data);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.lede{color:var(--muted);max-width:68ch;margin:6px 0 0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.kpi{background:var(--surface);padding:14px 16px;display:grid;gap:2px}
+.kpi b{font-family:var(--f-data);font-weight:500;font-size:24px;font-variant-numeric:tabular-nums}
+.kpi span{font-size:13px;color:var(--muted)}
+.findings{display:grid;gap:10px;margin:0;padding-left:20px;max-width:72ch}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px;display:grid;gap:10px;min-width:0}
+.panel p{margin:0;color:var(--muted);font-size:14px;max-width:72ch}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px}
+svg{width:100%;height:auto;display:block}
+svg text{font-family:var(--f-data);font-size:11px;fill:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+td.n{font-family:var(--f-data);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+th.n{text-align:right}
+.tag{font-family:var(--f-data);font-size:12px;background:var(--soft);color:var(--accent);padding:2px 7px;border-radius:3px;white-space:nowrap}
+.pill{font-family:var(--f-data);font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid currentColor}
+.pass{color:var(--good)} .fail{color:var(--bad)}
+.gaps{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+.gaps li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline}
+.gaps b{font-family:var(--f-data);font-weight:500;font-size:18px;min-width:64px;color:var(--accent-2)}
+footer{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+code{font-family:var(--f-data);font-size:12.5px}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Product analytics · contributor loop</div>
+    <h1>Q&amp;A Launch Health</h1>
+    <p class="lede">How a new community Q&amp;A site grew in its first 19 weeks, built from the public Stack Exchange data dump for Artificial Intelligence Stack Exchange (Aug 2 – Dec 11, 2016). Every figure below is queried from the warehouse; none are estimated.</p>
+  </header>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="panel">
+    <h2>What the data says</h2>
+    <ol class="findings" id="findings"></ol>
+  </section>
+
+  <div class="grid2">
+    <section class="panel">
+      <h2>Weekly active contributors</h2>
+      <p>Users with at least one attributable action (ask, answer, comment, edit, accept, favorite, bounty) per week. Voters and readers are not logged per user, so this is a contributor count, not DAU.</p>
+      <div class="legend"><span><i class="sw" style="background:var(--accent)"></i>Returning</span><span><i class="sw" style="background:var(--accent-2)"></i>New this week</span></div>
+      <svg id="wac" viewBox="0 0 460 220" role="img" aria-label="Weekly active contributors, new versus returning"></svg>
+    </section>
+    <section class="panel">
+      <h2>Contributor retention by cohort</h2>
+      <p>Share of each first-contribution cohort active again N weeks later. Cohort weeks with zero returners count as 0; only fully observed weeks are included.</p>
+      <div class="legend"><span><i class="sw" style="background:var(--accent-2)"></i>Launch-week cohort (87)</span><span><i class="sw" style="background:var(--accent)"></i>All later cohorts (377)</span></div>
+      <svg id="ret" viewBox="0 0 460 220" role="img" aria-label="Retention curves, launch cohort versus later cohorts"></svg>
+    </section>
+  </div>
+
+  <section class="panel">
+    <h2>Question funnel by week asked</h2>
+    <p>Bars: questions asked. Line: share answered. The last three weeks are lighter because those questions are under 14 days old at snapshot end and are excluded from funnel rates.</p>
+    <div class="legend"><span><i class="sw" style="background:var(--accent)"></i>Asked</span><span><i class="sw" style="background:var(--accent-2)"></i>Answered rate</span></div>
+    <svg id="funnel" viewBox="0 0 920 230" role="img" aria-label="Questions asked per week with answered rate"></svg>
+  </section>
+
+  <section class="panel">
+    <h2>Tag health</h2>
+    <p>Tags with 20 or more mature questions, sorted by accept rate. Low accept rate marks topics where askers rarely get an answer they mark as solving their problem.</p>
+    <div class="tbl"><table id="tags"><thead><tr><th>Tag</th><th class="n">Questions</th><th class="n">Answered</th><th class="n">Accepted</th><th class="n">Median hrs to 1st answer</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel">
+      <h2>Logging gaps found</h2>
+      <ul class="gaps" id="gaps"></ul>
+    </section>
+    <section class="panel">
+      <h2>Dataset SLAs</h2>
+      <p>Checked on every pipeline run; any breach fails the orchestration run.</p>
+      <div class="tbl"><table id="sla"><thead><tr><th>Check</th><th class="n">Observed</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+    </section>
+  </div>
+
+  <footer>Source: Stack Exchange data dump (CC BY-SA), artificial intelligence site, mirrored in <code>bigdata-vandy/stack-ex</code> @ <code>a9ad674</code>; SHA-256 of each file recorded at ingest. Week starts Monday. Warehouse: DuckDB star schema; user ids pseudonymized with a salted hash before reaching analytics tables.</footer>
+</div>
+
+<script>
+const D = {"weekly": [{"wk": "2016-08-01", "wac": 87, "new_contributors": 87, "returning_contributors": 0}, {"wk": "2016-08-08", "wac": 57, "new_contributors": 24, "returning_contributors": 33}, {"wk": "2016-08-15", "wac": 22, "new_contributors": 4, "returning_contributors": 18}, {"wk": "2016-08-22", "wac": 51, "new_contributors": 27, "returning_contributors": 24}, {"wk": "2016-08-29", "wac": 87, "new_contributors": 61, "returning_contributors": 26}, {"wk": "2016-09-05", "wac": 71, "new_contributors": 43, "returning_contributors": 28}, {"wk": "2016-09-12", "wac": 39, "new_contributors": 17, "returning_contributors": 22}, {"wk": "2016-09-19", "wac": 25, "new_contributors": 8, "returning_contributors": 17}, {"wk": "2016-09-26", "wac": 38, "new_contributors": 15, "returning_contributors": 23}, {"wk": "2016-10-03", "wac": 35, "new_contributors": 12, "returning_contributors": 23}, {"wk": "2016-10-10", "wac": 44, "new_contributors": 27, "returning_contributors": 17}, {"wk": "2016-10-17", "wac": 40, "new_contributors": 15, "returning_contributors": 25}, {"wk": "2016-10-24", "wac": 26, "new_contributors": 9, "returning_contributors": 17}, {"wk": "2016-10-31", "wac": 55, "new_contributors": 29, "returning_contributors": 26}, {"wk": "2016-11-07", "wac": 41, "new_contributors": 20, "returning_contributors": 21}, {"wk": "2016-11-14", "wac": 36, "new_contributors": 13, "returning_contributors": 23}, {"wk": "2016-11-21", "wac": 43, "new_contributors": 24, "returning_contributors": 19}, {"wk": "2016-11-28", "wac": 47, "new_contributors": 29, "returning_contributors": 18}, {"wk": "2016-12-05", "wac": 34, "new_contributors": 15, "returning_contributors": 19}], "ret_all": [{"k": 0, "ret": 464, "base": 464}, {"k": 1, "ret": 94, "base": 435}, {"k": 2, "ret": 44, "base": 411}, {"k": 3, "ret": 27, "base": 398}, {"k": 4, "ret": 31, "base": 378}, {"k": 5, "ret": 26, "base": 349}, {"k": 6, "ret": 20, "base": 340}, {"k": 7, "ret": 17, "base": 325}, {"k": 8, "ret": 18, "base": 298}, {"k": 9, "ret": 16, "base": 286}, {"k": 10, "ret": 19, "base": 271}, {"k": 11, "ret": 16, "base": 263}, {"k": 12, "ret": 11, "base": 246}, {"k": 13, "ret": 12, "base": 203}, {"k": 14, "ret": 10, "base": 142}, {"k": 15, "ret": 8, "base": 115}, {"k": 16, "ret": 6, "base": 111}, {"k": 17, "ret": 5, "base": 87}], "ret_launch": [{"k": 0, "ret": 87, "base": 87}, {"k": 1, "ret": 33, "base": 87}, {"k": 2, "ret": 15, "base": 87}, {"k": 3, "ret": 17, "base": 87}, {"k": 4, "ret": 18, "base": 87}, {"k": 5, "ret": 14, "base": 87}, {"k": 6, "ret": 11, "base": 87}, {"k": 7, "ret": 9, "base": 87}, {"k": 8, "ret": 10, "base": 87}, {"k": 9, "ret": 10, "base": 87}, {"k": 10, "ret": 10, "base": 87}, {"k": 11, "ret": 9, "base": 87}, {"k": 12, "ret": 6, "base": 87}, {"k": 13, "ret": 9, "base": 87}, {"k": 14, "ret": 6, "base": 87}, {"k": 15, "ret": 6, "base": 87}, {"k": 16, "ret": 5, "base": 87}, {"k": 17, "ret": 5, "base": 87}], "ret_later": [{"k": 0, "ret": 377, "base": 377}, {"k": 1, "ret": 61, "base": 348}, {"k": 2, "ret": 29, "base": 324}, {"k": 3, "ret": 10, "base": 311}, {"k": 4, "ret": 13, "base": 291}, {"k": 5, "ret": 12, "base": 262}, {"k": 6, "ret": 9, "base": 253}, {"k": 7, "ret": 8, "base": 238}, {"k": 8, "ret": 8, "base": 211}, {"k": 9, "ret": 6, "base": 199}, {"k": 10, "ret": 9, "base": 184}, {"k": 11, "ret": 7, "base": 176}, {"k": 12, "ret": 5, "base": 159}, {"k": 13, "ret": 3, "base": 116}, {"k": 14, "ret": 4, "base": 55}, {"k": 15, "ret": 2, "base": 28}, {"k": 16, "ret": 1, "base": 24}], "funnel": [{"wk": "2016-08-01", "asked": 156, "answered": 143, "accepted": 91, "med": 1.32, "all_mature": true}, {"wk": "2016-08-08", "asked": 52, "answered": 46, "accepted": 35, "med": 7.48, "all_mature": true}, {"wk": "2016-08-15", "asked": 21, "answered": 19, "accepted": 14, "med": 2.77, "all_mature": true}, {"wk": "2016-08-22", "asked": 11, "answered": 10, "accepted": 4, "med": 6.39, "all_mature": true}, {"wk": "2016-08-29", "asked": 17, "answered": 15, "accepted": 6, "med": 2.47, "all_mature": true}, {"wk": "2016-09-05", "asked": 21, "answered": 20, "accepted": 7, "med": 2.22, "all_mature": true}, {"wk": "2016-09-12", "asked": 13, "answered": 12, "accepted": 4, "med": 1.66, "all_mature": true}, {"wk": "2016-09-19", "asked": 6, "answered": 6, "accepted": 4, "med": 7.19, "all_mature": true}, {"wk": "2016-09-26", "asked": 13, "answered": 12, "accepted": 10, "med": 6.73, "all_mature": true}, {"wk": "2016-10-03", "asked": 8, "answered": 7, "accepted": 5, "med": 3.43, "all_mature": true}, {"wk": "2016-10-10", "asked": 15, "answered": 13, "accepted": 5, "med": 4.08, "all_mature": true}, {"wk": "2016-10-17", "asked": 9, "answered": 9, "accepted": 5, "med": 2.22, "all_mature": true}, {"wk": "2016-10-24", "asked": 7, "answered": 6, "accepted": 2, "med": 12.52, "all_mature": true}, {"wk": "2016-10-31", "asked": 17, "answered": 13, "accepted": 8, "med": 2.5, "all_mature": true}, {"wk": "2016-11-07", "asked": 10, "answered": 8, "accepted": 2, "med": 19.63, "all_mature": true}, {"wk": "2016-11-14", "asked": 10, "answered": 9, "accepted": 4, "med": 5.2, "all_mature": true}, {"wk": "2016-11-21", "asked": 10, "answered": 7, "accepted": 2, "med": 11.4, "all_mature": false}, {"wk": "2016-11-28", "asked": 15, "answered": 10, "accepted": 4, "med": 8.19, "all_mature": false}, {"wk": "2016-12-05", "asked": 10, "answered": 3, "accepted": 0, "med": 5.7, "all_mature": false}], "tags": [{"tag": "neural-networks", "questions": 75, "answer_rate": 0.9067, "accept_rate": 0.5467, "med": 4.16}, {"tag": "machine-learning", "questions": 43, "answer_rate": 0.814, "accept_rate": 0.3488, "med": 3.43}, {"tag": "deep-learning", "questions": 30, "answer_rate": 0.8333, "accept_rate": 0.5333, "med": 4.27}, {"tag": "research", "questions": 29, "answer_rate": 0.8966, "accept_rate": 0.3103, "med": 5.22}, {"tag": "deep-network", "questions": 22, "answer_rate": 0.9545, "accept_rate": 0.5909, "med": 4.27}, {"tag": "image-recognition", "questions": 22, "answer_rate": 1.0, "accept_rate": 0.6364, "med": 11.19}, {"tag": "philosophy", "questions": 22, "answer_rate": 1.0, "accept_rate": 0.4545, "med": 2.31}, {"tag": "algorithm", "questions": 20, "answer_rate": 0.75, "accept_rate": 0.4, "med": 12.37}], "kpi": {"signups": 3156.0, "contributors": 479.0, "events": 3897.0, "mature_q": 395.0, "mature_answered": 355.0, "mature_accepted": 208.0, "med_h": 3.216666666666667, "votes": 5323.0, "votes_attr": 271.0, "votes_orphan": 394.0, "sla_pass": 13.0, "sla_total": 13.0}, "sla": [{"dataset": "analytics.fct_user_events", "sla_type": "freshness", "description": "days between latest event and source snapshot end", "observed": 0.0, "comparator": "<=", "threshold": 1.0, "passed": true}, {"dataset": "stg.votes", "sla_type": "completeness", "description": "raw votes minus (staged + quarantined)", "observed": 0.0, "comparator": "==", "threshold": 0.0, "passed": true}, {"dataset": "analytics.fct_user_events", "sla_type": "completeness", "description": "owned questions+answers missing from event log", "observed": 0.0, "comparator": "==", "threshold": 0.0, "passed": true}, {"dataset": "analytics.fct_user_events", "sla_type": "completeness", "description": "attributed comments missing from event log", "observed": 0.0, "comparator": "==", "threshold": 0.0, "passed": true}, {"dataset": "analytics.fct_user_events", "sla_type": "uniqueness", "description": "duplicate event_id rows", "observed": 0.0, "comparator": "==", "threshold": 0.0, "passed": true}, {"dataset": "analytics.dim_user", "sla_type": "uniqueness", "description": "duplicate user_key rows", "observed": 0.0, "comparator": "==", "threshold": 0.0, "passed": true}, {"dataset": "analytics.fct_user_events", "sla_type": "integrity", "description": "events whose user_key is not in dim_user", "observed": 0.0, "comparator": "<=", "threshold": 0.0, "passed": true}, {"dataset": "analytics.fct_question_outcomes", "sla_type": "integrity", "description": "answers whose parent question is missing", "observed": 0.0, "comparator": "==", "threshold": 0.0, "passed": true}, {"dataset": "analytics.fct_question_outcomes", "sla_type": "validity", "description": "negative time-to-first-answer rows", "observed": 0.0, "comparator": "==", "threshold": 0.0, "passed": true}, {"dataset": "analytics.agg_retention_cohort", "sla_type": "validity", "description": "retention rates outside [0,1]", "observed": 0.0, "comparator": "==", "threshold": 0.0, "passed": true}, {"dataset": "analytics.agg_retention_cohort", "sla_type": "validity", "description": "week-0 retention not equal to 1.0", "observed": 0.0, "comparator": "==", "threshold": 0.0, "passed": true}, {"dataset": "analytics.agg_retention_cohort", "sla_type": "completeness", "description": "cohort-week offsets missing from the retention grid", "observed": 0.0, "comparator": "==", "threshold": 0.0, "passed": true}, {"dataset": "analytics.*", "sla_type": "privacy", "description": "PII / raw-id columns present in analytics schema", "observed": 0.0, "comparator": "==", "threshold": 0.0, "passed": true}], "later": {"a": 239, "n": 212, "c": 117, "med": 4.6}};
+const fmt = n => n.toLocaleString('en-US');
+const pct = (a,b,d=1) => (100*a/b).toFixed(d)+'%';
+const K = D.kpi;
+const rl = D.ret_launch, rr = D.ret_later, ra = D.ret_all;
+const launchQ = D.funnel[0];
+const lq = D.later;
+
+document.getElementById('kpis').innerHTML = [
+  [fmt(K.signups),'accounts created'],
+  [pct(K.contributors,K.signups),`ever contributed (${fmt(K.contributors)})`],
+  [pct(ra[1].ret,ra[1].base),'week-1 contributor retention'],
+  [pct(K.mature_answered,K.mature_q),`of ${fmt(K.mature_q)} mature questions answered`],
+  [pct(K.mature_accepted,K.mature_q),'have an accepted answer'],
+  [K.med_h.toFixed(1)+' h','median time to first answer'],
+].map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join('');
+
+const asked = D.funnel.slice(2).map(r=>r.asked);
+const ret2 = D.weekly.slice(1).map(r=>r.returning_contributors);
+document.getElementById('findings').innerHTML = [
+  `Launch week was the peak: ${launchQ.asked} questions and ${D.weekly[0].wac} first-time contributors. From week 3 on, questions held between ${Math.min(...asked)} and ${Math.max(...asked)} per week.`,
+  `The returning core is small but steady: ${Math.min(...ret2)} to ${Math.max(...ret2)} returning contributors every week after launch.`,
+  `Launch-week contributors stuck around far better. Week-1 retention was ${pct(rl[1].ret,rl[1].base)} for the launch cohort versus ${pct(rr[1].ret,rr[1].base)} for later cohorts; by week 4 it was ${pct(rl[4].ret,rl[4].base)} versus ${pct(rr[4].ret,rr[4].base)}.`,
+  `Answer supply kept up: ${pct(lq.n,lq.a)} of later mature questions got an answer (${pct(launchQ.answered,launchQ.asked)} in launch week), though the median wait grew from ${launchQ.med.toFixed(1)} h to ${lq.med.toFixed(1)} h and the accept rate fell from ${pct(launchQ.accepted,launchQ.asked)} to ${pct(lq.c,lq.a)}.`,
+  `Implication: the constraint is turning sign-ups into repeat contributors (${pct(K.contributors,K.signups)} ever contribute), not answering questions. A first-week nudge toward answering or editing is the experiment I would test first.`
+].map(t=>`<li>${t}</li>`).join('');
+
+// ---- weekly stacked bars
+(function(){
+  const s=document.getElementById('wac'), W=460,H=220,L=34,R=8,T=10,B=26;
+  const rows=D.weekly, max=100, bw=(W-L-R)/rows.length;
+  const y=v=>T+(H-T-B)*(1-v/max);
+  let g='';
+  for(const t of [0,25,50,75,100]) g+=`<line x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)"/><text x="${L-6}" y="${y(t)+4}" text-anchor="end">${t}</text>`;
+  rows.forEach((r,i)=>{const x=L+i*bw+2,w=bw-4;
+    g+=`<rect x="${x}" y="${y(r.returning_contributors)}" width="${w}" height="${y(0)-y(r.returning_contributors)}" fill="var(--accent)"><title>${r.wk}: ${r.returning_contributors} returning</title></rect>`;
+    g+=`<rect x="${x}" y="${y(r.wac)}" width="${w}" height="${y(r.returning_contributors)-y(r.wac)}" fill="var(--accent-2)"><title>${r.wk}: ${r.new_contributors} new</title></rect>`;
+    if(i%4===0) g+=`<text x="${x+w/2}" y="${H-8}" text-anchor="middle">${r.wk.slice(5)}</text>`;});
+  s.innerHTML=g;})();
+
+// ---- retention lines
+(function(){
+  const s=document.getElementById('ret'), W=460,H=220,L=38,R=10,T=10,B=26, N=8;
+  const x=k=>L+(W-L-R)*k/N, y=v=>T+(H-T-B)*(1-v/0.4);
+  let g='';
+  for(const t of [0,.1,.2,.3,.4]) g+=`<line x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)"/><text x="${L-6}" y="${y(t)+4}" text-anchor="end">${t*100}%</text>`;
+  for(let k=1;k<=N;k++) g+=`<text x="${x(k)}" y="${H-8}" text-anchor="middle">wk ${k}</text>`;
+  for(const [ser,col] of [[rr,'var(--accent)'],[rl,'var(--accent-2)']]){
+    const pts=ser.filter(r=>r.k>=1&&r.k<=N).map(r=>[x(r.k),y(r.ret/r.base),r]);
+    g+=`<polyline fill="none" stroke="${col}" stroke-width="2.25" points="${pts.map(p=>p[0]+','+p[1]).join(' ')}"/>`;
+    pts.forEach(([px,py,r])=>g+=`<circle cx="${px}" cy="${py}" r="3.2" fill="${col}"><title>week ${r.k}: ${r.ret}/${r.base} (${pct(r.ret,r.base)})</title></circle>`);
+  }
+  s.innerHTML=g;})();
+
+// ---- funnel
+(function(){
+  const s=document.getElementById('funnel'), W=920,H=230,L=36,R=44,T=12,B=28;
+  const rows=D.funnel, bw=(W-L-R)/rows.length, max=160;
+  const y=v=>T+(H-T-B)*(1-v/max), yr=v=>T+(H-T-B)*(1-v);
+  let g='';
+  for(const t of [0,40,80,120,160]) g+=`<line x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)"/><text x="${L-6}" y="${y(t)+4}" text-anchor="end">${t}</text>`;
+  for(const t of [0,.5,1]) g+=`<text x="${W-R+6}" y="${yr(t)+4}">${t*100}%</text>`;
+  const pts=[];
+  rows.forEach((r,i)=>{const x=L+i*bw+3,w=bw-6;
+    g+=`<rect x="${x}" y="${y(r.asked)}" width="${w}" height="${y(0)-y(r.asked)}" fill="var(--accent)" opacity="${r.all_mature?1:.35}"><title>${r.wk}: ${r.asked} asked, ${r.answered} answered, ${r.accepted} accepted</title></rect>`;
+    if(r.all_mature) pts.push([x+w/2,yr(r.answered/r.asked)]);
+    if(i%3===0) g+=`<text x="${x+w/2}" y="${H-8}" text-anchor="middle">${r.wk.slice(5)}</text>`;});
+  g+=`<polyline fill="none" stroke="var(--accent-2)" stroke-width="2.25" points="${pts.map(p=>p.join(',')).join(' ')}"/>`;
+  pts.forEach(p=>g+=`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="var(--accent-2)"/>`);
+  s.innerHTML=g;})();
+
+// ---- tags
+document.querySelector('#tags tbody').innerHTML = [...D.tags].sort((a,b)=>a.accept_rate-b.accept_rate).map(t=>
+  `<tr><td><span class="tag">${t.tag}</span></td><td class="n">${t.questions}</td><td class="n">${(t.answer_rate*100).toFixed(0)}%</td><td class="n">${(t.accept_rate*100).toFixed(0)}%</td><td class="n">${t.med.toFixed(1)}</td></tr>`).join('');
+
+// ---- gaps
+document.getElementById('gaps').innerHTML = [
+  [pct(K.votes_attr,K.votes),`of ${fmt(K.votes)} votes carry a voter id (favorites and bounties only). Upvotes and downvotes are anonymous, so pure voters never count as active.`],
+  [fmt(K.votes_orphan),`votes (${pct(K.votes_orphan,K.votes)}) point at deleted posts missing from the dump. Quarantined, not dropped; a post_deleted tombstone event would resolve them.`],
+  ['0','read or view events. Only lifetime view counts exist, so true DAU and impression funnels cannot be built.'],
+  ['1 day','timestamp grain on votes, so time-to-accept can only be measured in days.']
+].map(([b,t])=>`<li><b>${b}</b><span>${t}</span></li>`).join('');
+
+// ---- sla
+document.querySelector('#sla tbody').innerHTML = D.sla.map(r=>
+  `<tr><td>${r.description}<br><span class="eyebrow" style="font-size:11px">${r.sla_type} · ${r.dataset}</span></td><td class="n">${r.observed} ${r.comparator} ${r.threshold}</td><td><span class="pill ${r.passed?'pass':'fail'}">${r.passed?'met':'breach'}</span></td></tr>`).join('');
+</script>

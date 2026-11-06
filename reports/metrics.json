@@ -1,0 +1,740 @@
+{
+ "weekly": [
+  {
+   "wk": "2016-08-01",
+   "wac": 87,
+   "new_contributors": 87,
+   "returning_contributors": 0
+  },
+  {
+   "wk": "2016-08-08",
+   "wac": 57,
+   "new_contributors": 24,
+   "returning_contributors": 33
+  },
+  {
+   "wk": "2016-08-15",
+   "wac": 22,
+   "new_contributors": 4,
+   "returning_contributors": 18
+  },
+  {
+   "wk": "2016-08-22",
+   "wac": 51,
+   "new_contributors": 27,
+   "returning_contributors": 24
+  },
+  {
+   "wk": "2016-08-29",
+   "wac": 87,
+   "new_contributors": 61,
+   "returning_contributors": 26
+  },
+  {
+   "wk": "2016-09-05",
+   "wac": 71,
+   "new_contributors": 43,
+   "returning_contributors": 28
+  },
+  {
+   "wk": "2016-09-12",
+   "wac": 39,
+   "new_contributors": 17,
+   "returning_contributors": 22
+  },
+  {
+   "wk": "2016-09-19",
+   "wac": 25,
+   "new_contributors": 8,
+   "returning_contributors": 17
+  },
+  {
+   "wk": "2016-09-26",
+   "wac": 38,
+   "new_contributors": 15,
+   "returning_contributors": 23
+  },
+  {
+   "wk": "2016-10-03",
+   "wac": 35,
+   "new_contributors": 12,
+   "returning_contributors": 23
+  },
+  {
+   "wk": "2016-10-10",
+   "wac": 44,
+   "new_contributors": 27,
+   "returning_contributors": 17
+  },
+  {
+   "wk": "2016-10-17",
+   "wac": 40,
+   "new_contributors": 15,
+   "returning_contributors": 25
+  },
+  {
+   "wk": "2016-10-24",
+   "wac": 26,
+   "new_contributors": 9,
+   "returning_contributors": 17
+  },
+  {
+   "wk": "2016-10-31",
+   "wac": 55,
+   "new_contributors": 29,
+   "returning_contributors": 26
+  },
+  {
+   "wk": "2016-11-07",
+   "wac": 41,
+   "new_contributors": 20,
+   "returning_contributors": 21
+  },
+  {
+   "wk": "2016-11-14",
+   "wac": 36,
+   "new_contributors": 13,
+   "returning_contributors": 23
+  },
+  {
+   "wk": "2016-11-21",
+   "wac": 43,
+   "new_contributors": 24,
+   "returning_contributors": 19
+  },
+  {
+   "wk": "2016-11-28",
+   "wac": 47,
+   "new_contributors": 29,
+   "returning_contributors": 18
+  },
+  {
+   "wk": "2016-12-05",
+   "wac": 34,
+   "new_contributors": 15,
+   "returning_contributors": 19
+  }
+ ],
+ "ret_all": [
+  {
+   "k": 0,
+   "ret": 464,
+   "base": 464
+  },
+  {
+   "k": 1,
+   "ret": 94,
+   "base": 435
+  },
+  {
+   "k": 2,
+   "ret": 44,
+   "base": 411
+  },
+  {
+   "k": 3,
+   "ret": 27,
+   "base": 398
+  },
+  {
+   "k": 4,
+   "ret": 31,
+   "base": 378
+  },
+  {
+   "k": 5,
+   "ret": 26,
+   "base": 349
+  },
+  {
+   "k": 6,
+   "ret": 20,
+   "base": 340
+  },
+  {
+   "k": 7,
+   "ret": 17,
+   "base": 325
+  },
+  {
+   "k": 8,
+   "ret": 18,
+   "base": 298
+  },
+  {
+   "k": 9,
+   "ret": 16,
+   "base": 286
+  },
+  {
+   "k": 10,
+   "ret": 19,
+   "base": 271
+  },
+  {
+   "k": 11,
+   "ret": 16,
+   "base": 263
+  },
+  {
+   "k": 12,
+   "ret": 11,
+   "base": 246
+  },
+  {
+   "k": 13,
+   "ret": 12,
+   "base": 203
+  },
+  {
+   "k": 14,
+   "ret": 10,
+   "base": 142
+  },
+  {
+   "k": 15,
+   "ret": 8,
+   "base": 115
+  },
+  {
+   "k": 16,
+   "ret": 6,
+   "base": 111
+  },
+  {
+   "k": 17,
+   "ret": 5,
+   "base": 87
+  }
+ ],
+ "ret_launch": [
+  {
+   "k": 0,
+   "ret": 87,
+   "base": 87
+  },
+  {
+   "k": 1,
+   "ret": 33,
+   "base": 87
+  },
+  {
+   "k": 2,
+   "ret": 15,
+   "base": 87
+  },
+  {
+   "k": 3,
+   "ret": 17,
+   "base": 87
+  },
+  {
+   "k": 4,
+   "ret": 18,
+   "base": 87
+  },
+  {
+   "k": 5,
+   "ret": 14,
+   "base": 87
+  },
+  {
+   "k": 6,
+   "ret": 11,
+   "base": 87
+  },
+  {
+   "k": 7,
+   "ret": 9,
+   "base": 87
+  },
+  {
+   "k": 8,
+   "ret": 10,
+   "base": 87
+  },
+  {
+   "k": 9,
+   "ret": 10,
+   "base": 87
+  },
+  {
+   "k": 10,
+   "ret": 10,
+   "base": 87
+  },
+  {
+   "k": 11,
+   "ret": 9,
+   "base": 87
+  },
+  {
+   "k": 12,
+   "ret": 6,
+   "base": 87
+  },
+  {
+   "k": 13,
+   "ret": 9,
+   "base": 87
+  },
+  {
+   "k": 14,
+   "ret": 6,
+   "base": 87
+  },
+  {
+   "k": 15,
+   "ret": 6,
+   "base": 87
+  },
+  {
+   "k": 16,
+   "ret": 5,
+   "base": 87
+  },
+  {
+   "k": 17,
+   "ret": 5,
+   "base": 87
+  }
+ ],
+ "ret_later": [
+  {
+   "k": 0,
+   "ret": 377,
+   "base": 377
+  },
+  {
+   "k": 1,
+   "ret": 61,
+   "base": 348
+  },
+  {
+   "k": 2,
+   "ret": 29,
+   "base": 324
+  },
+  {
+   "k": 3,
+   "ret": 10,
+   "base": 311
+  },
+  {
+   "k": 4,
+   "ret": 13,
+   "base": 291
+  },
+  {
+   "k": 5,
+   "ret": 12,
+   "base": 262
+  },
+  {
+   "k": 6,
+   "ret": 9,
+   "base": 253
+  },
+  {
+   "k": 7,
+   "ret": 8,
+   "base": 238
+  },
+  {
+   "k": 8,
+   "ret": 8,
+   "base": 211
+  },
+  {
+   "k": 9,
+   "ret": 6,
+   "base": 199
+  },
+  {
+   "k": 10,
+   "ret": 9,
+   "base": 184
+  },
+  {
+   "k": 11,
+   "ret": 7,
+   "base": 176
+  },
+  {
+   "k": 12,
+   "ret": 5,
+   "base": 159
+  },
+  {
+   "k": 13,
+   "ret": 3,
+   "base": 116
+  },
+  {
+   "k": 14,
+   "ret": 4,
+   "base": 55
+  },
+  {
+   "k": 15,
+   "ret": 2,
+   "base": 28
+  },
+  {
+   "k": 16,
+   "ret": 1,
+   "base": 24
+  }
+ ],
+ "funnel": [
+  {
+   "wk": "2016-08-01",
+   "asked": 156,
+   "answered": 143,
+   "accepted": 91,
+   "med": 1.32,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-08-08",
+   "asked": 52,
+   "answered": 46,
+   "accepted": 35,
+   "med": 7.48,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-08-15",
+   "asked": 21,
+   "answered": 19,
+   "accepted": 14,
+   "med": 2.77,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-08-22",
+   "asked": 11,
+   "answered": 10,
+   "accepted": 4,
+   "med": 6.39,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-08-29",
+   "asked": 17,
+   "answered": 15,
+   "accepted": 6,
+   "med": 2.47,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-09-05",
+   "asked": 21,
+   "answered": 20,
+   "accepted": 7,
+   "med": 2.22,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-09-12",
+   "asked": 13,
+   "answered": 12,
+   "accepted": 4,
+   "med": 1.66,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-09-19",
+   "asked": 6,
+   "answered": 6,
+   "accepted": 4,
+   "med": 7.19,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-09-26",
+   "asked": 13,
+   "answered": 12,
+   "accepted": 10,
+   "med": 6.73,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-10-03",
+   "asked": 8,
+   "answered": 7,
+   "accepted": 5,
+   "med": 3.43,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-10-10",
+   "asked": 15,
+   "answered": 13,
+   "accepted": 5,
+   "med": 4.08,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-10-17",
+   "asked": 9,
+   "answered": 9,
+   "accepted": 5,
+   "med": 2.22,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-10-24",
+   "asked": 7,
+   "answered": 6,
+   "accepted": 2,
+   "med": 12.52,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-10-31",
+   "asked": 17,
+   "answered": 13,
+   "accepted": 8,
+   "med": 2.5,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-11-07",
+   "asked": 10,
+   "answered": 8,
+   "accepted": 2,
+   "med": 19.63,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-11-14",
+   "asked": 10,
+   "answered": 9,
+   "accepted": 4,
+   "med": 5.2,
+   "all_mature": true
+  },
+  {
+   "wk": "2016-11-21",
+   "asked": 10,
+   "answered": 7,
+   "accepted": 2,
+   "med": 11.4,
+   "all_mature": false
+  },
+  {
+   "wk": "2016-11-28",
+   "asked": 15,
+   "answered": 10,
+   "accepted": 4,
+   "med": 8.19,
+   "all_mature": false
+  },
+  {
+   "wk": "2016-12-05",
+   "asked": 10,
+   "answered": 3,
+   "accepted": 0,
+   "med": 5.7,
+   "all_mature": false
+  }
+ ],
+ "tags": [
+  {
+   "tag": "neural-networks",
+   "questions": 75,
+   "answer_rate": 0.9067,
+   "accept_rate": 0.5467,
+   "med": 4.16
+  },
+  {
+   "tag": "machine-learning",
+   "questions": 43,
+   "answer_rate": 0.814,
+   "accept_rate": 0.3488,
+   "med": 3.43
+  },
+  {
+   "tag": "deep-learning",
+   "questions": 30,
+   "answer_rate": 0.8333,
+   "accept_rate": 0.5333,
+   "med": 4.27
+  },
+  {
+   "tag": "research",
+   "questions": 29,
+   "answer_rate": 0.8966,
+   "accept_rate": 0.3103,
+   "med": 5.22
+  },
+  {
+   "tag": "deep-network",
+   "questions": 22,
+   "answer_rate": 0.9545,
+   "accept_rate": 0.5909,
+   "med": 4.27
+  },
+  {
+   "tag": "image-recognition",
+   "questions": 22,
+   "answer_rate": 1.0,
+   "accept_rate": 0.6364,
+   "med": 11.19
+  },
+  {
+   "tag": "philosophy",
+   "questions": 22,
+   "answer_rate": 1.0,
+   "accept_rate": 0.4545,
+   "med": 2.31
+  },
+  {
+   "tag": "algorithm",
+   "questions": 20,
+   "answer_rate": 0.75,
+   "accept_rate": 0.4,
+   "med": 12.37
+  }
+ ],
+ "kpi": {
+  "signups": 3156.0,
+  "contributors": 479.0,
+  "events": 3897.0,
+  "mature_q": 395.0,
+  "mature_answered": 355.0,
+  "mature_accepted": 208.0,
+  "med_h": 3.216666666666667,
+  "votes": 5323.0,
+  "votes_attr": 271.0,
+  "votes_orphan": 394.0,
+  "sla_pass": 13.0,
+  "sla_total": 13.0
+ },
+ "sla": [
+  {
+   "dataset": "analytics.fct_user_events",
+   "sla_type": "freshness",
+   "description": "days between latest event and source snapshot end",
+   "observed": 0.0,
+   "comparator": "<=",
+   "threshold": 1.0,
+   "passed": true
+  },
+  {
+   "dataset": "stg.votes",
+   "sla_type": "completeness",
+   "description": "raw votes minus (staged + quarantined)",
+   "observed": 0.0,
+   "comparator": "==",
+   "threshold": 0.0,
+   "passed": true
+  },
+  {
+   "dataset": "analytics.fct_user_events",
+   "sla_type": "completeness",
+   "description": "owned questions+answers missing from event log",
+   "observed": 0.0,
+   "comparator": "==",
+   "threshold": 0.0,
+   "passed": true
+  },
+  {
+   "dataset": "analytics.fct_user_events",
+   "sla_type": "completeness",
+   "description": "attributed comments missing from event log",
+   "observed": 0.0,
+   "comparator": "==",
+   "threshold": 0.0,
+   "passed": true
+  },
+  {
+   "dataset": "analytics.fct_user_events",
+   "sla_type": "uniqueness",
+   "description": "duplicate event_id rows",
+   "observed": 0.0,
+   "comparator": "==",
+   "threshold": 0.0,
+   "passed": true
+  },
+  {
+   "dataset": "analytics.dim_user",
+   "sla_type": "uniqueness",
+   "description": "duplicate user_key rows",
+   "observed": 0.0,
+   "comparator": "==",
+   "threshold": 0.0,
+   "passed": true
+  },
+  {
+   "dataset": "analytics.fct_user_events",
+   "sla_type": "integrity",
+   "description": "events whose user_key is not in dim_user",
+   "observed": 0.0,
+   "comparator": "<=",
+   "threshold": 0.0,
+   "passed": true
+  },
+  {
+   "dataset": "analytics.fct_question_outcomes",
+   "sla_type": "integrity",
+   "description": "answers whose parent question is missing",
+   "observed": 0.0,
+   "comparator": "==",
+   "threshold": 0.0,
+   "passed": true
+  },
+  {
+   "dataset": "analytics.fct_question_outcomes",
+   "sla_type": "validity",
+   "description": "negative time-to-first-answer rows",
+   "observed": 0.0,
+   "comparator": "==",
+   "threshold": 0.0,
+   "passed": true
+  },
+  {
+   "dataset": "analytics.agg_retention_cohort",
+   "sla_type": "validity",
+   "description": "retention rates outside [0,1]",
+   "observed": 0.0,
+   "comparator": "==",
+   "threshold": 0.0,
+   "passed": true
+  },
+  {
+   "dataset": "analytics.agg_retention_cohort",
+   "sla_type": "validity",
+   "description": "week-0 retention not equal to 1.0",
+   "observed": 0.0,
+   "comparator": "==",
+   "threshold": 0.0,
+   "passed": true
+  },
+  {
+   "dataset": "analytics.agg_retention_cohort",
+   "sla_type": "completeness",
+   "description": "cohort-week offsets missing from the retention grid",
+   "observed": 0.0,
+   "comparator": "==",
+   "threshold": 0.0,
+   "passed": true
+  },
+  {
+   "dataset": "analytics.*",
+   "sla_type": "privacy",
+   "description": "PII / raw-id columns present in analytics schema",
+   "observed": 0.0,
+   "comparator": "==",
+   "threshold": 0.0,
+   "passed": true
+  }
+ ],
+ "later": {
+  "a": 239,
+  "n": 212,
+  "c": 117,
+  "med": 4.6
+ }
+}
