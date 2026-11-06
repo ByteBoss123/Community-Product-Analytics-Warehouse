@@ -192,7 +192,7 @@
         <rows>[federated.monthly_active_long].[sum:contributors:qk]</rows>
         <cols>[federated.monthly_active_long].[none:month_start:qk]</cols>
       </table>
-      <simple-id uuid='{9D6BC8B3-C0F1-4482-AD7F-40E1C412686E}' />
+      <simple-id uuid='{607C6B7A-CBBC-43AD-BA3F-6F86166300C6}' />
     </worksheet>
     <worksheet name="Retention by Cohort Era">
       <layout-options><title><formatted-text><run bold='true'>Retention by Cohort Era</run><run fontsize='9' fontcolor='#6b7280'>&#10;Share of each first-contribution cohort active again N months later. Blue 2010-14, orange 2015-19, red 2020-23.</run></formatted-text></title></layout-options>
@@ -220,7 +220,7 @@
         <rows>[federated.retention_by_era].[sum:retention_rate:qk]</rows>
         <cols>[federated.retention_by_era].[none:month_offset:ok]</cols>
       </table>
-      <simple-id uuid='{4E7F8369-30CE-46A6-9FCD-AA9B1ABC66F5}' />
+      <simple-id uuid='{6D4CA4C8-D517-46E1-8C6A-5E7464E0C097}' />
     </worksheet>
     <worksheet name="Questions Asked per Year">
       <layout-options><title><formatted-text><run bold='true'>Questions Asked per Year</run><run fontsize='9' fontcolor='#6b7280'>&#10;Orange = 2024, partial year (dump ends 2024-03-31).</run></formatted-text></title></layout-options>
@@ -248,7 +248,7 @@
         <rows>[federated.question_funnel_yearly].[sum:asked:qk]</rows>
         <cols>[federated.question_funnel_yearly].[none:asked_year:ok]</cols>
       </table>
-      <simple-id uuid='{4F5962A8-E73C-47F8-83B0-36F124FDC796}' />
+      <simple-id uuid='{82D963AE-EF6E-4413-BCE8-81D507081F93}' />
     </worksheet>
     <worksheet name="Answered Rate per Year">
       <layout-options><title><formatted-text><run bold='true'>Answered Rate per Year</run><run fontsize='9' fontcolor='#6b7280'>&#10;Share of questions with at least one answer, by year asked.</run></formatted-text></title></layout-options>
@@ -276,7 +276,7 @@
         <rows>[federated.question_funnel_yearly].[sum:answered_rate:qk]</rows>
         <cols>[federated.question_funnel_yearly].[none:asked_year:ok]</cols>
       </table>
-      <simple-id uuid='{19508E12-525D-41D9-B519-517045BE6B60}' />
+      <simple-id uuid='{0334B2C9-DE1E-4C13-B76D-89E1B982ABF2}' />
     </worksheet>
     <worksheet name="Top Tags: Accept Rate">
       <layout-options><title><formatted-text><run bold='true'>Top Tags: Accept Rate</run><run fontsize='9' fontcolor='#6b7280'>&#10;15 highest-volume tags, mature questions only.</run></formatted-text></title></layout-options>
@@ -306,7 +306,7 @@
         <rows>[federated.tag_health].[none:tag:nk]</rows>
         <cols>[federated.tag_health].[sum:accept_rate:qk]</cols>
       </table>
-      <simple-id uuid='{32BF69A6-B307-4408-985E-429BB4ED266B}' />
+      <simple-id uuid='{7AF27D29-921F-482F-B56D-5B4C7C024412}' />
     </worksheet>
     <worksheet name="A/A Experiment Check">
       <layout-options><title><formatted-text><run bold='true'>A/A Experiment Check</run><run fontsize='9' fontcolor='#6b7280'>&#10;24,587 real 2023 sign-ups, hash-split 50/50, no treatment. No metric differs.</run></formatted-text></title></layout-options>
@@ -334,7 +334,7 @@
         <rows>[federated.experiment_aa].[none:metric:nk]</rows>
         <cols>[federated.experiment_aa].[none:stat:nk]</cols>
       </table>
-      <simple-id uuid='{5F962654-59FB-4823-9133-8C3DD07C4AE4}' />
+      <simple-id uuid='{A4090718-FD45-465B-A7C2-28A04EDE8085}' />
     </worksheet>
     <worksheet name="Dataset SLAs">
       <layout-options><title><formatted-text><run bold='true'>Dataset SLAs</run><run fontsize='9' fontcolor='#6b7280'>&#10;Checked on every pipeline run; any breach fails the run.</run></formatted-text></title></layout-options>
@@ -366,7 +366,7 @@
         <rows>[federated.sla_status].[none:sla_type:nk] / [federated.sla_status].[none:description:nk] / [federated.sla_status].[none:target:nk] / [federated.sla_status].[none:status:nk]</rows>
         <cols></cols>
       </table>
-      <simple-id uuid='{51C1E8C3-52AC-4656-84AA-121AA5234896}' />
+      <simple-id uuid='{68BE40F5-4231-4832-9581-1069B8AFE514}' />
     </worksheet>
   </worksheets>
   <dashboards>
@@ -386,17 +386,17 @@
           <zone h='35455' id='17' name="Dataset SLAs" type-v2='visual' w='35714' x='64286' y='64545' />
         </zone>
       </zones>
-      <simple-id uuid='{0C04025A-9D70-4948-BD5E-34B6198CBED1}' />
+      <simple-id uuid='{A50C1663-88EC-4C5C-9817-78901E6E4C21}' />
     </dashboard>
   </dashboards>
   <windows>
-    <window class='worksheet' hidden='true' name="Monthly Active Contributors"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{473BBCE7-9B48-4D54-A678-830E16672317}' /></window>
-    <window class='worksheet' hidden='true' name="Retention by Cohort Era"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{18EAE771-3868-4BA2-9974-1DD7295696B6}' /></window>
-    <window class='worksheet' hidden='true' name="Questions Asked per Year"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{C8FAC0E6-D3B6-4178-B32E-3594968FF46F}' /></window>
-    <window class='worksheet' hidden='true' name="Answered Rate per Year"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{5D06EF65-53A3-40D8-9086-6E4DCC47A4E2}' /></window>
-    <window class='worksheet' hidden='true' name="Top Tags: Accept Rate"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{04BFE3BF-CB6C-4F8A-84AC-F9C5871A6C82}' /></window>
-    <window class='worksheet' hidden='true' name="A/A Experiment Check"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{A8D81215-27D5-42AF-937F-0F012CEB75D9}' /></window>
-    <window class='worksheet' hidden='true' name="Dataset SLAs"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{8A9DE9C7-89D2-44E9-84A1-45CF093B01A8}' /></window>
-    <window class='dashboard' maximized='true' name='Q&amp;A Community Health'><viewpoints><viewpoint name="Monthly Active Contributors" /><viewpoint name="Retention by Cohort Era" /><viewpoint name="Questions Asked per Year" /><viewpoint name="Answered Rate per Year" /><viewpoint name="Top Tags: Accept Rate" /><viewpoint name="A/A Experiment Check" /><viewpoint name="Dataset SLAs" /></viewpoints><active id='-1' /><simple-id uuid='{ABC85DCF-004C-438E-8737-AE590537DCC4}' /></window>
+    <window class='worksheet' hidden='true' name="Monthly Active Contributors"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{ED7E70A2-96D5-4F48-9E1E-B75C57DB3DAA}' /></window>
+    <window class='worksheet' hidden='true' name="Retention by Cohort Era"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{2CBC6A42-71E5-48E7-908C-9A23485FB53B}' /></window>
+    <window class='worksheet' hidden='true' name="Questions Asked per Year"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{7980DCE4-E6F8-4568-909D-F327532B798E}' /></window>
+    <window class='worksheet' hidden='true' name="Answered Rate per Year"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{AAEE9004-CAC6-428E-8354-BE896A4B52E7}' /></window>
+    <window class='worksheet' hidden='true' name="Top Tags: Accept Rate"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{3A25D848-1BB8-431B-90EC-8FF617989462}' /></window>
+    <window class='worksheet' hidden='true' name="A/A Experiment Check"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{A39F8ED1-8C6A-453E-97A3-FE8443F9BA81}' /></window>
+    <window class='worksheet' hidden='true' name="Dataset SLAs"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{C72375D1-5411-4C36-AAEF-DCF68977D598}' /></window>
+    <window class='dashboard' maximized='true' name='Q&amp;A Community Health'><viewpoints><viewpoint name="Monthly Active Contributors" /><viewpoint name="Retention by Cohort Era" /><viewpoint name="Questions Asked per Year" /><viewpoint name="Answered Rate per Year" /><viewpoint name="Top Tags: Accept Rate" /><viewpoint name="A/A Experiment Check" /><viewpoint name="Dataset SLAs" /></viewpoints><active id='-1' /><simple-id uuid='{47E52B8F-60AB-445A-B220-B0A376631CA4}' /></window>
   </windows>
 </workbook>

@@ -6,6 +6,7 @@ validity,analytics.fct_question_outcomes,answers predating their question outsid
 validity,analytics.agg_retention_cohort,"retention rates outside [0,1] or month-0 not 1.0",0.0,== 0.0,Met
 completeness,analytics.agg_retention_cohort,cohort-month offsets missing from the retention grid,0.0,== 0.0,Met
 validity,analytics.agg_experiment_results,experiment sample-ratio mismatch (min SRM p-value; must be >= 0.001),0.9238,>= 0.001,Met
+completeness,logs.events,logged events not reconciled with warehouse (both directions + field mismatches),0.0,== 0.0,Met
 privacy,analytics.*,PII / raw-id columns present in analytics tables,0.0,== 0.0,Met
 freshness,analytics.fct_user_events,days between latest event and source snapshot end,0.0,<= 1.0,Met
 completeness,raw.*,"landed rows minus source rows, all 8 tables (from ingest audit)",0.0,== 0.0,Met
