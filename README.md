@@ -55,6 +55,15 @@ Pooling those rows dropped zero-retention cells from the denominator and oversta
 retention (week 3 read 11.1% instead of the correct 6.8%). The mart now builds a full
 cohort × offset grid, and an SLA check fails if any cell is missing.
 
+## Tableau dashboard
+
+`tableau/Community_Product_Analytics.twb` (Tableau 2026.2) reads the six CSV extracts in `tableau/`,
+generated from the warehouse by `src/build_tableau.py`. Dashboard "Q&A Launch Health": KPI strip,
+weekly active contributors, cohort retention, questions asked, answered rate, tag accept rate, SLA status.
+The CSV folder path is set in the workbook; if you move the folder, re-point it via Data > Edit Data Source.
+
+![Tableau dashboard](docs/img/tableau_dashboard.jpg)
+
 ## Verification
 
 - `python3 src/pipeline.py`: full build, 13/13 SLAs met.
