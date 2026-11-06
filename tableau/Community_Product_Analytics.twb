@@ -7,76 +7,76 @@
   </document-format-change-manifest>
   <preferences />
   <datasources>
-    <datasource caption='weekly_active_long' inline='true' name='federated.weekly_active_long' version='18.1'>
+    <datasource caption='monthly_active_long' inline='true' name='federated.monthly_active_long' version='18.1'>
       <connection class='federated'>
         <named-connections>
-          <named-connection caption='weekly_active_long' name='textscan.weekly_active_long'>
-            <connection class='textscan' directory="C:/Users/amarg/Documents/community-product-analytics/tableau" filename='weekly_active_long.csv' password='' server='' />
+          <named-connection caption='monthly_active_long' name='textscan.monthly_active_long'>
+            <connection class='textscan' directory="C:/Users/amarg/Documents/community-product-analytics/tableau" filename='monthly_active_long.csv' password='' server='' />
           </named-connection>
         </named-connections>
-        <relation connection='textscan.weekly_active_long' name='weekly_active_long.csv' table='[weekly_active_long#csv]' type='table'>
+        <relation connection='textscan.monthly_active_long' name='monthly_active_long.csv' table='[monthly_active_long#csv]' type='table'>
           <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
-            <column datatype='date' name='week_start' ordinal='0' />
+            <column datatype='date' name='month_start' ordinal='0' />
             <column datatype='string' name='segment' ordinal='1' />
             <column datatype='integer' name='contributors' ordinal='2' />
           </columns>
         </relation>
       </connection>
-      <column caption="Week" datatype='date' name='[week_start]' role='dimension' type='ordinal' />
+      <column caption="Month" datatype='date' name='[month_start]' role='dimension' type='ordinal' />
       <column caption="Segment" datatype='string' name='[segment]' role='dimension' type='nominal' />
       <column caption="Contributors" datatype='integer' name='[contributors]' role='measure' type='quantitative' />
     </datasource>
-    <datasource caption='retention_curve' inline='true' name='federated.retention_curve' version='18.1'>
+    <datasource caption='retention_by_era' inline='true' name='federated.retention_by_era' version='18.1'>
       <connection class='federated'>
         <named-connections>
-          <named-connection caption='retention_curve' name='textscan.retention_curve'>
-            <connection class='textscan' directory="C:/Users/amarg/Documents/community-product-analytics/tableau" filename='retention_curve.csv' password='' server='' />
+          <named-connection caption='retention_by_era' name='textscan.retention_by_era'>
+            <connection class='textscan' directory="C:/Users/amarg/Documents/community-product-analytics/tableau" filename='retention_by_era.csv' password='' server='' />
           </named-connection>
         </named-connections>
-        <relation connection='textscan.retention_curve' name='retention_curve.csv' table='[retention_curve#csv]' type='table'>
+        <relation connection='textscan.retention_by_era' name='retention_by_era.csv' table='[retention_by_era#csv]' type='table'>
           <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
-            <column datatype='string' name='cohort_group' ordinal='0' />
-            <column datatype='integer' name='week_offset' ordinal='1' />
+            <column datatype='string' name='cohort_era' ordinal='0' />
+            <column datatype='integer' name='month_offset' ordinal='1' />
             <column datatype='integer' name='retained_users' ordinal='2' />
             <column datatype='integer' name='eligible_users' ordinal='3' />
             <column datatype='real' name='retention_rate' ordinal='4' />
           </columns>
         </relation>
       </connection>
-      <column caption="Cohort" datatype='string' name='[cohort_group]' role='dimension' type='nominal' />
-      <column caption="Weeks after first contribution" datatype='integer' name='[week_offset]' role='dimension' type='ordinal' />
+      <column caption="Cohort era" datatype='string' name='[cohort_era]' role='dimension' type='nominal' />
+      <column caption="Months after first contribution" datatype='integer' name='[month_offset]' role='dimension' type='ordinal' />
       <column datatype='integer' name='[retained_users]' role='measure' type='quantitative' />
       <column datatype='integer' name='[eligible_users]' role='measure' type='quantitative' />
       <column caption="Retention" datatype='real' default-format='p0%' name='[retention_rate]' role='measure' type='quantitative' />
     </datasource>
-    <datasource caption='question_funnel' inline='true' name='federated.question_funnel' version='18.1'>
+    <datasource caption='question_funnel_yearly' inline='true' name='federated.question_funnel_yearly' version='18.1'>
       <connection class='federated'>
         <named-connections>
-          <named-connection caption='question_funnel' name='textscan.question_funnel'>
-            <connection class='textscan' directory="C:/Users/amarg/Documents/community-product-analytics/tableau" filename='question_funnel.csv' password='' server='' />
+          <named-connection caption='question_funnel_yearly' name='textscan.question_funnel_yearly'>
+            <connection class='textscan' directory="C:/Users/amarg/Documents/community-product-analytics/tableau" filename='question_funnel_yearly.csv' password='' server='' />
           </named-connection>
         </named-connections>
-        <relation connection='textscan.question_funnel' name='question_funnel.csv' table='[question_funnel#csv]' type='table'>
+        <relation connection='textscan.question_funnel_yearly' name='question_funnel_yearly.csv' table='[question_funnel_yearly#csv]' type='table'>
           <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
-            <column datatype='date' name='asked_week' ordinal='0' />
+            <column datatype='integer' name='asked_year' ordinal='0' />
             <column datatype='integer' name='asked' ordinal='1' />
             <column datatype='integer' name='answered' ordinal='2' />
             <column datatype='integer' name='accepted' ordinal='3' />
             <column datatype='real' name='answered_rate' ordinal='4' />
             <column datatype='real' name='accepted_rate' ordinal='5' />
             <column datatype='real' name='median_hours_to_first_answer' ordinal='6' />
-            <column datatype='string' name='maturity' ordinal='7' />
+            <column datatype='string' name='coverage' ordinal='7' />
           </columns>
         </relation>
       </connection>
-      <column caption="Week asked" datatype='date' name='[asked_week]' role='dimension' type='ordinal' />
+      <column caption="Year asked" datatype='integer' name='[asked_year]' role='dimension' type='ordinal' />
       <column caption="Questions asked" datatype='integer' name='[asked]' role='measure' type='quantitative' />
       <column datatype='integer' name='[answered]' role='measure' type='quantitative' />
       <column datatype='integer' name='[accepted]' role='measure' type='quantitative' />
       <column caption="Answered rate" datatype='real' default-format='p0%' name='[answered_rate]' role='measure' type='quantitative' />
       <column caption="Accepted rate" datatype='real' default-format='p0%' name='[accepted_rate]' role='measure' type='quantitative' />
       <column datatype='real' name='[median_hours_to_first_answer]' role='measure' type='quantitative' />
-      <column caption="Maturity" datatype='string' name='[maturity]' role='dimension' type='nominal' />
+      <column caption="Coverage" datatype='string' name='[coverage]' role='dimension' type='nominal' />
     </datasource>
     <datasource caption='tag_health' inline='true' name='federated.tag_health' version='18.1'>
       <connection class='federated'>
@@ -100,6 +100,39 @@
       <column caption="Answer rate" datatype='real' default-format='p0%' name='[answer_rate]' role='measure' type='quantitative' />
       <column caption="Accept rate" datatype='real' default-format='p0%' name='[accept_rate]' role='measure' type='quantitative' />
       <column datatype='real' name='[median_hours_to_first_answer]' role='measure' type='quantitative' />
+    </datasource>
+    <datasource caption='experiment_aa' inline='true' name='federated.experiment_aa' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='experiment_aa' name='textscan.experiment_aa'>
+            <connection class='textscan' directory="C:/Users/amarg/Documents/community-product-analytics/tableau" filename='experiment_aa.csv' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.experiment_aa' name='experiment_aa.csv' table='[experiment_aa#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name='metric' ordinal='0' />
+            <column datatype='integer' name='control_n' ordinal='1' />
+            <column datatype='integer' name='treatment_n' ordinal='2' />
+            <column datatype='real' name='control_mean' ordinal='3' />
+            <column datatype='real' name='treatment_mean' ordinal='4' />
+            <column datatype='real' name='delta' ordinal='5' />
+            <column datatype='real' name='ci_low' ordinal='6' />
+            <column datatype='real' name='ci_high' ordinal='7' />
+            <column datatype='real' name='p_value' ordinal='8' />
+            <column datatype='string' name='verdict' ordinal='9' />
+          </columns>
+        </relation>
+      </connection>
+      <column caption="Metric" datatype='string' name='[metric]' role='dimension' type='nominal' />
+      <column datatype='integer' name='[control_n]' role='measure' type='quantitative' />
+      <column datatype='integer' name='[treatment_n]' role='measure' type='quantitative' />
+      <column caption="Control" datatype='real' name='[control_mean]' role='measure' type='quantitative' />
+      <column caption="Treatment" datatype='real' name='[treatment_mean]' role='measure' type='quantitative' />
+      <column caption="Delta" datatype='real' name='[delta]' role='measure' type='quantitative' />
+      <column caption="95% CI low" datatype='real' name='[ci_low]' role='measure' type='quantitative' />
+      <column caption="95% CI high" datatype='real' name='[ci_high]' role='measure' type='quantitative' />
+      <column caption="p-value" datatype='real' name='[p_value]' role='measure' type='quantitative' />
+      <column caption="Verdict" datatype='string' name='[verdict]' role='dimension' type='nominal' />
     </datasource>
     <datasource caption='sla_status' inline='true' name='federated.sla_status' version='18.1'>
       <connection class='federated'>
@@ -147,16 +180,16 @@
     </datasource>
   </datasources>
   <worksheets>
-    <worksheet name="Weekly Active Contributors">
-      <layout-options><title><formatted-text><run bold='true'>Weekly Active Contributors</run><run fontsize='9' fontcolor='#6b7280'>&#10;Blue = new this week, orange = returning. Users with 1+ attributable action that week.</run></formatted-text></title></layout-options>
+    <worksheet name="Monthly Active Contributors">
+      <layout-options><title><formatted-text><run bold='true'>Monthly Active Contributors</run><run fontsize='9' fontcolor='#6b7280'>&#10;Blue = first contribution that month, orange = returning. Peak 2017, declining since.</run></formatted-text></title></layout-options>
       <table>
         <view>
-          <datasources><datasource caption='weekly_active_long' name='federated.weekly_active_long' /></datasources>
-          <datasource-dependencies datasource='federated.weekly_active_long'>
-            <column datatype='date' name='[week_start]' role='dimension' type='ordinal' />
+          <datasources><datasource caption='monthly_active_long' name='federated.monthly_active_long' /></datasources>
+          <datasource-dependencies datasource='federated.monthly_active_long'>
+            <column datatype='date' name='[month_start]' role='dimension' type='ordinal' />
             <column datatype='integer' name='[contributors]' role='measure' type='quantitative' />
             <column datatype='string' name='[segment]' role='dimension' type='nominal' />
-            <column-instance column='[week_start]' derivation='None' name='[none:week_start:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[month_start]' derivation='None' name='[none:month_start:qk]' pivot='key' type='quantitative' />
             <column-instance column='[contributors]' derivation='Sum' name='[sum:contributors:qk]' pivot='key' type='quantitative' />
             <column-instance column='[segment]' derivation='None' name='[none:segment:nk]' pivot='key' type='nominal' />
           </datasource-dependencies>
@@ -166,27 +199,27 @@
         <panes>
           <pane selection-relaxation-option='selection-relaxation-allow'>
             <view><breakdown value='auto' /></view>
-            <mark class='Bar' />
-            <encodings><color column='[federated.weekly_active_long].[none:segment:nk]' /></encodings>
+            <mark class='Area' />
+            <encodings><color column='[federated.monthly_active_long].[none:segment:nk]' /></encodings>
           </pane>
         </panes>
-        <rows>[federated.weekly_active_long].[sum:contributors:qk]</rows>
-        <cols>[federated.weekly_active_long].[none:week_start:qk]</cols>
+        <rows>[federated.monthly_active_long].[sum:contributors:qk]</rows>
+        <cols>[federated.monthly_active_long].[none:month_start:qk]</cols>
       </table>
-      <simple-id uuid='{FE8546A1-2CB9-44B9-AAAF-7187F135D9E6}' />
+      <simple-id uuid='{17BBA9DB-2338-410C-9C93-67EBB8C8816B}' />
     </worksheet>
-    <worksheet name="Contributor Retention">
-      <layout-options><title><formatted-text><run bold='true'>Contributor Retention</run><run fontsize='9' fontcolor='#6b7280'>&#10;Orange = launch-week cohort (87), blue = all later cohorts (377). Zero-return weeks count as 0.</run></formatted-text></title></layout-options>
+    <worksheet name="Retention by Cohort Era">
+      <layout-options><title><formatted-text><run bold='true'>Retention by Cohort Era</run><run fontsize='9' fontcolor='#6b7280'>&#10;Share of each first-contribution cohort active again N months later. Blue 2010-14, orange 2015-19, red 2020-23.</run></formatted-text></title></layout-options>
       <table>
         <view>
-          <datasources><datasource caption='retention_curve' name='federated.retention_curve' /></datasources>
-          <datasource-dependencies datasource='federated.retention_curve'>
-            <column datatype='integer' name='[week_offset]' role='dimension' type='ordinal' />
+          <datasources><datasource caption='retention_by_era' name='federated.retention_by_era' /></datasources>
+          <datasource-dependencies datasource='federated.retention_by_era'>
+            <column datatype='integer' name='[month_offset]' role='dimension' type='ordinal' />
             <column datatype='real' name='[retention_rate]' role='measure' type='quantitative' />
-            <column datatype='string' name='[cohort_group]' role='dimension' type='nominal' />
-            <column-instance column='[week_offset]' derivation='None' name='[none:week_offset:ok]' pivot='key' type='ordinal' />
+            <column datatype='string' name='[cohort_era]' role='dimension' type='nominal' />
+            <column-instance column='[month_offset]' derivation='None' name='[none:month_offset:ok]' pivot='key' type='ordinal' />
             <column-instance column='[retention_rate]' derivation='Sum' name='[sum:retention_rate:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[cohort_group]' derivation='None' name='[none:cohort_group:nk]' pivot='key' type='nominal' />
+            <column-instance column='[cohort_era]' derivation='None' name='[none:cohort_era:nk]' pivot='key' type='nominal' />
           </datasource-dependencies>
           <aggregation value='true' />
         </view>
@@ -195,26 +228,26 @@
           <pane selection-relaxation-option='selection-relaxation-allow'>
             <view><breakdown value='auto' /></view>
             <mark class='Line' />
-            <encodings><color column='[federated.retention_curve].[none:cohort_group:nk]' /><text column='[federated.retention_curve].[sum:retention_rate:qk]' /></encodings>
+            <encodings><color column='[federated.retention_by_era].[none:cohort_era:nk]' /></encodings>
           </pane>
         </panes>
-        <rows>[federated.retention_curve].[sum:retention_rate:qk]</rows>
-        <cols>[federated.retention_curve].[none:week_offset:ok]</cols>
+        <rows>[federated.retention_by_era].[sum:retention_rate:qk]</rows>
+        <cols>[federated.retention_by_era].[none:month_offset:ok]</cols>
       </table>
-      <simple-id uuid='{06C8AFD6-B3DC-4835-9D13-4DFF3BCE54D1}' />
+      <simple-id uuid='{DAAC4874-9F71-465C-9D9D-0396882D764F}' />
     </worksheet>
-    <worksheet name="Questions Asked per Week">
-      <layout-options><title><formatted-text><run bold='true'>Questions Asked per Week</run><run fontsize='9' fontcolor='#6b7280'>&#10;Orange = asked under 14 days before snapshot end, excluded from funnel rates.</run></formatted-text></title></layout-options>
+    <worksheet name="Questions Asked per Year">
+      <layout-options><title><formatted-text><run bold='true'>Questions Asked per Year</run><run fontsize='9' fontcolor='#6b7280'>&#10;Orange = 2024, partial year (dump ends 2024-03-31).</run></formatted-text></title></layout-options>
       <table>
         <view>
-          <datasources><datasource caption='question_funnel' name='federated.question_funnel' /></datasources>
-          <datasource-dependencies datasource='federated.question_funnel'>
-            <column datatype='date' name='[asked_week]' role='dimension' type='ordinal' />
+          <datasources><datasource caption='question_funnel_yearly' name='federated.question_funnel_yearly' /></datasources>
+          <datasource-dependencies datasource='federated.question_funnel_yearly'>
+            <column datatype='integer' name='[asked_year]' role='dimension' type='ordinal' />
             <column datatype='integer' name='[asked]' role='measure' type='quantitative' />
-            <column datatype='string' name='[maturity]' role='dimension' type='nominal' />
-            <column-instance column='[asked_week]' derivation='None' name='[none:asked_week:qk]' pivot='key' type='quantitative' />
+            <column datatype='string' name='[coverage]' role='dimension' type='nominal' />
+            <column-instance column='[asked_year]' derivation='None' name='[none:asked_year:ok]' pivot='key' type='ordinal' />
             <column-instance column='[asked]' derivation='Sum' name='[sum:asked:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[maturity]' derivation='None' name='[none:maturity:nk]' pivot='key' type='nominal' />
+            <column-instance column='[coverage]' derivation='None' name='[none:coverage:nk]' pivot='key' type='nominal' />
           </datasource-dependencies>
           <aggregation value='true' />
         </view>
@@ -223,26 +256,26 @@
           <pane selection-relaxation-option='selection-relaxation-allow'>
             <view><breakdown value='auto' /></view>
             <mark class='Bar' />
-            <encodings><color column='[federated.question_funnel].[none:maturity:nk]' /></encodings>
+            <encodings><color column='[federated.question_funnel_yearly].[none:coverage:nk]' /></encodings>
           </pane>
         </panes>
-        <rows>[federated.question_funnel].[sum:asked:qk]</rows>
-        <cols>[federated.question_funnel].[none:asked_week:qk]</cols>
+        <rows>[federated.question_funnel_yearly].[sum:asked:qk]</rows>
+        <cols>[federated.question_funnel_yearly].[none:asked_year:ok]</cols>
       </table>
-      <simple-id uuid='{CFAA75FE-1A52-4157-929F-B64EF48706E4}' />
+      <simple-id uuid='{B77698BD-2E7D-4F8C-8EEE-84B7ED280BFD}' />
     </worksheet>
-    <worksheet name="Answered Rate per Week">
-      <layout-options><title><formatted-text><run bold='true'>Answered Rate per Week</run><run fontsize='9' fontcolor='#6b7280'>&#10;Share of questions with at least one answer. Orange = too recent to judge.</run></formatted-text></title></layout-options>
+    <worksheet name="Answered Rate per Year">
+      <layout-options><title><formatted-text><run bold='true'>Answered Rate per Year</run><run fontsize='9' fontcolor='#6b7280'>&#10;Share of questions with at least one answer, by year asked.</run></formatted-text></title></layout-options>
       <table>
         <view>
-          <datasources><datasource caption='question_funnel' name='federated.question_funnel' /></datasources>
-          <datasource-dependencies datasource='federated.question_funnel'>
-            <column datatype='date' name='[asked_week]' role='dimension' type='ordinal' />
+          <datasources><datasource caption='question_funnel_yearly' name='federated.question_funnel_yearly' /></datasources>
+          <datasource-dependencies datasource='federated.question_funnel_yearly'>
+            <column datatype='integer' name='[asked_year]' role='dimension' type='ordinal' />
             <column datatype='real' name='[answered_rate]' role='measure' type='quantitative' />
-            <column datatype='string' name='[maturity]' role='dimension' type='nominal' />
-            <column-instance column='[asked_week]' derivation='None' name='[none:asked_week:qk]' pivot='key' type='quantitative' />
+            <column datatype='real' name='[accepted_rate]' role='measure' type='quantitative' />
+            <column-instance column='[asked_year]' derivation='None' name='[none:asked_year:ok]' pivot='key' type='ordinal' />
             <column-instance column='[answered_rate]' derivation='Sum' name='[sum:answered_rate:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[maturity]' derivation='None' name='[none:maturity:nk]' pivot='key' type='nominal' />
+            <column-instance column='[accepted_rate]' derivation='Sum' name='[sum:accepted_rate:qk]' pivot='key' type='quantitative' />
           </datasource-dependencies>
           <aggregation value='true' />
         </view>
@@ -250,17 +283,17 @@
         <panes>
           <pane selection-relaxation-option='selection-relaxation-allow'>
             <view><breakdown value='auto' /></view>
-            <mark class='Circle' />
-            <encodings><color column='[federated.question_funnel].[none:maturity:nk]' /></encodings>
+            <mark class='Line' />
+            <encodings><text column='[federated.question_funnel_yearly].[sum:answered_rate:qk]' /></encodings>
           </pane>
         </panes>
-        <rows>[federated.question_funnel].[sum:answered_rate:qk]</rows>
-        <cols>[federated.question_funnel].[none:asked_week:qk]</cols>
+        <rows>[federated.question_funnel_yearly].[sum:answered_rate:qk]</rows>
+        <cols>[federated.question_funnel_yearly].[none:asked_year:ok]</cols>
       </table>
-      <simple-id uuid='{F5803100-817F-4678-8F0F-2B9D29FC11E8}' />
+      <simple-id uuid='{D1D6FA3E-E9F7-474C-BBAA-F7F264483390}' />
     </worksheet>
-    <worksheet name="Tag Accept Rate">
-      <layout-options><title><formatted-text><run bold='true'>Tag Accept Rate</run><run fontsize='9' fontcolor='#6b7280'>&#10;Tags with 20+ mature questions.</run></formatted-text></title></layout-options>
+    <worksheet name="Top Tags: Accept Rate">
+      <layout-options><title><formatted-text><run bold='true'>Top Tags: Accept Rate</run><run fontsize='9' fontcolor='#6b7280'>&#10;15 highest-volume tags, mature questions only.</run></formatted-text></title></layout-options>
       <table>
         <view>
           <datasources><datasource caption='tag_health' name='federated.tag_health' /></datasources>
@@ -287,10 +320,42 @@
         <rows>[federated.tag_health].[none:tag:nk]</rows>
         <cols>[federated.tag_health].[sum:accept_rate:qk]</cols>
       </table>
-      <simple-id uuid='{3E4BC5E2-5D9A-4AEE-B9D1-68CF72AB5DFD}' />
+      <simple-id uuid='{BB366D9C-97A7-4856-A99A-D6E878F358EB}' />
+    </worksheet>
+    <worksheet name="A/A Test: Experiment Pipeline Check">
+      <layout-options><title><formatted-text><run bold='true'>A/A Test: Experiment Pipeline Check</run><run fontsize='9' fontcolor='#6b7280'>&#10;24,587 real 2023 sign-ups, hash-split 50/50, no treatment. Text = control | treatment | p-value.</run></formatted-text></title></layout-options>
+      <table>
+        <view>
+          <datasources><datasource caption='experiment_aa' name='federated.experiment_aa' /></datasources>
+          <datasource-dependencies datasource='federated.experiment_aa'>
+            <column datatype='string' name='[metric]' role='dimension' type='nominal' />
+            <column datatype='string' name='[verdict]' role='dimension' type='nominal' />
+            <column datatype='real' name='[control_mean]' role='measure' type='quantitative' />
+            <column datatype='real' name='[treatment_mean]' role='measure' type='quantitative' />
+            <column datatype='real' name='[p_value]' role='measure' type='quantitative' />
+            <column-instance column='[metric]' derivation='None' name='[none:metric:nk]' pivot='key' type='nominal' />
+            <column-instance column='[verdict]' derivation='None' name='[none:verdict:nk]' pivot='key' type='nominal' />
+            <column-instance column='[control_mean]' derivation='Sum' name='[sum:control_mean:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[treatment_mean]' derivation='Sum' name='[sum:treatment_mean:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[p_value]' derivation='Sum' name='[sum:p_value:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view><breakdown value='auto' /></view>
+            <mark class='Text' />
+            <encodings><text column='[federated.experiment_aa].[sum:control_mean:qk]' /><text column='[federated.experiment_aa].[sum:treatment_mean:qk]' /><text column='[federated.experiment_aa].[sum:p_value:qk]' /></encodings>
+          </pane>
+        </panes>
+        <rows>[federated.experiment_aa].[none:metric:nk] / [federated.experiment_aa].[none:verdict:nk]</rows>
+        <cols></cols>
+      </table>
+      <simple-id uuid='{5D73EC8A-C534-4CBF-A53E-A4979A633473}' />
     </worksheet>
     <worksheet name="Dataset SLAs">
-      <layout-options><title><formatted-text><run bold='true'>Dataset SLAs</run><run fontsize='9' fontcolor='#6b7280'>&#10;Checked on every pipeline run; any breach fails the Airflow run.</run></formatted-text></title></layout-options>
+      <layout-options><title><formatted-text><run bold='true'>Dataset SLAs</run><run fontsize='9' fontcolor='#6b7280'>&#10;Checked on every pipeline run; any breach fails the run.</run></formatted-text></title></layout-options>
       <table>
         <view>
           <datasources><datasource caption='sla_status' name='federated.sla_status' /></datasources>
@@ -313,41 +378,43 @@
           <pane selection-relaxation-option='selection-relaxation-allow'>
             <view><breakdown value='auto' /></view>
             <mark class='Text' />
-            <encodings><text column='[federated.sla_status].[sum:observed:qk]' /><color column='[federated.sla_status].[none:status:nk]' /></encodings>
+            <encodings><text column='[federated.sla_status].[sum:observed:qk]' /></encodings>
           </pane>
         </panes>
         <rows>[federated.sla_status].[none:sla_type:nk] / [federated.sla_status].[none:description:nk] / [federated.sla_status].[none:target:nk] / [federated.sla_status].[none:status:nk]</rows>
         <cols></cols>
       </table>
-      <simple-id uuid='{7205A57E-4D97-4A0F-8FDF-24C5A906264F}' />
+      <simple-id uuid='{8B3360E2-EBC9-4DF5-9E35-F4CB9CE820DD}' />
     </worksheet>
   </worksheets>
   <dashboards>
-    <dashboard name='Q&amp;A Launch Health'>
+    <dashboard name='Q&amp;A Community Health'>
       <size maxheight='1100' maxwidth='1400' minheight='1100' minwidth='1400' sizing-mode='fixed' />
       <datasources />
       <zones>
         <zone h='100000' id='2' type-v2='layout-basic' w='100000' x='0' y='0'>
           <zone h='4545' id='10' type-v2='title' w='100000' x='0' y='0' />
-          <zone h='13636' id='17' type-v2='text' w='100000' x='0' y='4545'><formatted-text><run bold='true' fontcolor='#1c2230' fontsize='18'>3156</run><run fontcolor='#5d6678' fontsize='11'> accounts created    |    </run><run bold='true' fontcolor='#1c2230' fontsize='18'>15.2%</run><run fontcolor='#5d6678' fontsize='11'> ever contributed    |    </run><run bold='true' fontcolor='#1c2230' fontsize='18'>21.6%</run><run fontcolor='#5d6678' fontsize='11'> week-1 contributor retention    |    </run><run bold='true' fontcolor='#1c2230' fontsize='18'>89.9%</run><run fontcolor='#5d6678' fontsize='11'> mature questions answered    |    </run><run bold='true' fontcolor='#1c2230' fontsize='18'>52.7%</run><run fontcolor='#5d6678' fontsize='11'> have an accepted answer    |    </run><run bold='true' fontcolor='#1c2230' fontsize='18'>3.2</run><run fontcolor='#5d6678' fontsize='11'> median hours to first answer</run><run fontcolor='#5d6678' fontsize='10'>&#10;AI Stack Exchange public data dump, Aug 2 - Dec 11, 2016. Mature questions = asked 14+ days before snapshot end.</run></formatted-text></zone>
-          <zone h='26364' id='11' name="Weekly Active Contributors" type-v2='visual' w='50000' x='0' y='18182' />
-          <zone h='26364' id='12' name="Contributor Retention" type-v2='visual' w='50000' x='50000' y='18182' />
-          <zone h='23636' id='13' name="Questions Asked per Week" type-v2='visual' w='50000' x='0' y='44545' />
-          <zone h='23636' id='14' name="Answered Rate per Week" type-v2='visual' w='50000' x='50000' y='44545' />
-          <zone h='31818' id='15' name="Tag Accept Rate" type-v2='visual' w='40000' x='0' y='68182' />
-          <zone h='31818' id='16' name="Dataset SLAs" type-v2='visual' w='60000' x='40000' y='68182' />
+          <zone h='9091' id='18' type-v2='text' w='100000' x='0' y='4545'><formatted-text><run bold='true' fontcolor='#1c2230' fontsize='18'>345,753</run><run fontcolor='#5d6678' fontsize='11'> accounts    |    </run><run bold='true' fontcolor='#1c2230' fontsize='18'>114,528</run><run fontcolor='#5d6678' fontsize='11'> contributors    |    </run><run bold='true' fontcolor='#1c2230' fontsize='18'>1,751,986</run><run fontcolor='#5d6678' fontsize='11'> user actions logged    |    </run><run bold='true' fontcolor='#1c2230' fontsize='18'>13.0%</run><run fontcolor='#5d6678' fontsize='11'> month-1 contributor retention    |    </run><run bold='true' fontcolor='#1c2230' fontsize='18'>68.0%</run><run fontcolor='#5d6678' fontsize='11'> mature questions answered    |    </run><run bold='true' fontcolor='#1c2230' fontsize='18'>3.2</run><run fontcolor='#5d6678' fontsize='11'> median hours to first answer</run><run fontcolor='#5d6678' fontsize='10'>&#10;Cross Validated (stats.stackexchange.com) public data dump, Feb 2009 - Mar 31, 2024. Built with PySpark. Mature questions = asked 14+ days before snapshot end.</run></formatted-text></zone>
+          <zone h='27273' id='11' name="Monthly Active Contributors" type-v2='visual' w='50000' x='0' y='13636' />
+          <zone h='27273' id='12' name="Retention by Cohort Era" type-v2='visual' w='50000' x='50000' y='13636' />
+          <zone h='23636' id='13' name="Questions Asked per Year" type-v2='visual' w='50000' x='0' y='40909' />
+          <zone h='23636' id='14' name="Answered Rate per Year" type-v2='visual' w='50000' x='50000' y='40909' />
+          <zone h='35455' id='15' name="Top Tags: Accept Rate" type-v2='visual' w='30000' x='0' y='64545' />
+          <zone h='35455' id='16' name="A/A Test: Experiment Pipeline Check" type-v2='visual' w='34286' x='30000' y='64545' />
+          <zone h='35455' id='17' name="Dataset SLAs" type-v2='visual' w='35714' x='64286' y='64545' />
         </zone>
       </zones>
-      <simple-id uuid='{64BD0C3F-2F35-4E59-B5FA-6BBC62C4810C}' />
+      <simple-id uuid='{73FB3D8C-C124-49BE-8C98-D1C2DC4345D8}' />
     </dashboard>
   </dashboards>
   <windows>
-    <window class='worksheet' hidden='true' name="Weekly Active Contributors"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{55052E51-DEFD-427E-ACCD-064795BACC3C}' /></window>
-    <window class='worksheet' hidden='true' name="Contributor Retention"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{577DCA88-5916-4528-8A62-D293211391EE}' /></window>
-    <window class='worksheet' hidden='true' name="Questions Asked per Week"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{07E67240-FF4C-403E-800B-76580C5E924B}' /></window>
-    <window class='worksheet' hidden='true' name="Answered Rate per Week"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{68B21803-947F-40FE-8C6E-C52E044E4D04}' /></window>
-    <window class='worksheet' hidden='true' name="Tag Accept Rate"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{7BB1BC0D-0B44-43AA-9B98-7A3CAB2BC105}' /></window>
-    <window class='worksheet' hidden='true' name="Dataset SLAs"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{6DD62ADD-432E-46F5-94B4-69118237A78F}' /></window>
-    <window class='dashboard' maximized='true' name='Q&amp;A Launch Health'><viewpoints><viewpoint name="Weekly Active Contributors" /><viewpoint name="Contributor Retention" /><viewpoint name="Questions Asked per Week" /><viewpoint name="Answered Rate per Week" /><viewpoint name="Tag Accept Rate" /><viewpoint name="Dataset SLAs" /></viewpoints><active id='-1' /><simple-id uuid='{23BA8CBA-4512-48F9-BE5E-353AB09B0D5A}' /></window>
+    <window class='worksheet' hidden='true' name="Monthly Active Contributors"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{0BF410C1-7DB0-446A-9672-562E1158536E}' /></window>
+    <window class='worksheet' hidden='true' name="Retention by Cohort Era"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{6AEC7839-BA80-4714-8741-8E73D9A7ABB0}' /></window>
+    <window class='worksheet' hidden='true' name="Questions Asked per Year"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{BE12C267-5FF9-46E6-A281-A1CF16B18CBB}' /></window>
+    <window class='worksheet' hidden='true' name="Answered Rate per Year"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{FA71DEAE-A400-430A-BD93-70973060F514}' /></window>
+    <window class='worksheet' hidden='true' name="Top Tags: Accept Rate"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{D6244A8A-0262-47A0-869C-08B0A643F566}' /></window>
+    <window class='worksheet' hidden='true' name="A/A Test: Experiment Pipeline Check"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{CC0C3AE9-C02C-4283-8D30-0909DF0E1090}' /></window>
+    <window class='worksheet' hidden='true' name="Dataset SLAs"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{9CCA09B6-9BA9-4524-A486-D56770041975}' /></window>
+    <window class='dashboard' maximized='true' name='Q&amp;A Community Health'><viewpoints><viewpoint name="Monthly Active Contributors" /><viewpoint name="Retention by Cohort Era" /><viewpoint name="Questions Asked per Year" /><viewpoint name="Answered Rate per Year" /><viewpoint name="Top Tags: Accept Rate" /><viewpoint name="A/A Test: Experiment Pipeline Check" /><viewpoint name="Dataset SLAs" /></viewpoints><active id='-1' /><simple-id uuid='{6EDF01B8-A881-4A9D-8524-22BD10804504}' /></window>
   </windows>
 </workbook>

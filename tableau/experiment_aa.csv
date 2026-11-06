@@ -1,0 +1,5 @@
+metric,control_n,treatment_n,control_mean,treatment_mean,delta,ci_low,ci_high,p_value,verdict
+1. Activated in 28 days (primary),12286,12301,0.236041,0.236322,0.000281,-0.010337,0.010899,0.9586,No difference
+2. Asked a question in 28 days,12286,12301,0.197298,0.200959,0.003662,-0.006322,0.013645,0.4722,No difference
+3. Answered in 28 days,12286,12301,0.030767,0.028941,-0.001826,-0.00608,0.002429,0.4002,No difference
+4. Actions in 28 days (guardrail),12286,12301,0.724483,0.740428,0.015944,-0.044151,0.07604,0.6031,No difference

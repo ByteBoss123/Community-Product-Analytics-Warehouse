@@ -1,0 +1,61 @@
+{
+ "votes": {
+  "source": "Votes.xml",
+  "sha256": "443a22a5118b175d942715d78884fed7d2fb2ecb5f7a85628d73df98b12fe9a9",
+  "rows": 1747225,
+  "source_rows": 1747225
+ },
+ "users": {
+  "source": "Users.xml",
+  "sha256": "ccfe4ab92636a4f8845f4f03e765b09568aebb02831f0f3d1f65f7c734ca4273",
+  "rows": 345754,
+  "source_rows": 345754
+ },
+ "badges": {
+  "source": "Badges.xml",
+  "sha256": "fbadd1e4df48b052196e7a342fd2d9a4b395fd671e0635628eb84ef12428fa12",
+  "rows": 612258,
+  "source_rows": 612258
+ },
+ "tags": {
+  "source": "Tags.xml",
+  "sha256": "8b1493fb770d72ba9f580e7c24753c9f919d61af8c27f9bec0d430e17a523ff7",
+  "rows": 1612,
+  "source_rows": 1612
+ },
+ "postlinks": {
+  "source": "PostLinks.xml",
+  "sha256": "36b558302591ec80b866449a37e6429ac447910f7f49f3a0c7e84ec53ca71672",
+  "rows": 86919,
+  "source_rows": 86919
+ },
+ "posts": {
+  "source": "compact/posts",
+  "sha256": [
+   "26c6a4cfa5f1e2af11110607d4e79df39ee024312a8ab744952b70f87af4f573",
+   "95e7f62b1dce8bfba906189641b4102795d83f0629aad1adf48ab7e0ba6bed56",
+   "ec83d5fe59670311defd5b526b7ef930106ee18687a985257ada2fefe4256045",
+   "4c33f977062418c12465da1ac04139a799d42ef5bfd8b1ba567599129b40e28d",
+   "e0980d825f6dd35205ff58caf187ccfd96ead0528a0635661d5c08a0847ab1b0"
+  ],
+  "rows": 425735,
+  "source_rows": 425735
+ },
+ "comments": {
+  "source": "compact/comments",
+  "sha256": [
+   "948270162ab69ce85e0f78903e300d253877cc91a286eafef1f85efc80ebe9b8"
+  ],
+  "rows": 819648,
+  "source_rows": 819648
+ },
+ "posthistory": {
+  "source": "compact/posthistory",
+  "sha256": [
+   "5327ee27c4870fe6d036dd1de13a990c30eeabd9ec6d349b3feea0eef0b588d8",
+   "a928aabd55c4d6b40cb68237bde04e23b6264a014a2f51523a42800310269b34"
+  ],
+  "rows": 1525713,
+  "source_rows": 1525713
+ }
+}

@@ -1,4 +1,4 @@
-"""Build Tableau-ready CSVs from the warehouse and a .twb workbook that reads them.
+"""Build Tableau-ready CSVs from the Spark lake and a .twb workbook that reads them.
 
 Usage: python3 src/build_tableau.py <windows_dir_for_csvs>
 Writes tableau/*.csv and tableau/Community_Product_Analytics.twb.
@@ -14,79 +14,104 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "tableau"
 WIN_DIR = sys.argv[1] if len(sys.argv) > 1 else "C:/Users/amarg/Documents/community-product-analytics/tableau"
 
-# ---------------------------------------------------------------- CSV extracts
+# ---------------------------------------------------------------- CSV extracts (from the Spark lake)
+LAKE = ROOT / "lake"
 EXTRACTS = {
-    "weekly_active_long": """
-        SELECT week_start, 'Returning' AS segment, returning_contributors AS contributors FROM analytics.agg_weekly_active
+    "monthly_active_long": """
+        SELECT month_start, 'Returning' AS segment, returning_contributors AS contributors FROM a.agg_monthly_active
+        WHERE month_start >= DATE '2010-01-01' AND month_start < DATE '2024-04-01'
         UNION ALL
-        SELECT week_start, 'New this week', new_contributors FROM analytics.agg_weekly_active
+        SELECT month_start, 'New this month', new_contributors FROM a.agg_monthly_active
+        WHERE month_start >= DATE '2010-01-01' AND month_start < DATE '2024-04-01'
         ORDER BY 1, 2""",
-    "retention_curve": """
-        SELECT CASE WHEN cohort_week = DATE '2016-08-01' THEN 'Launch-week cohort' ELSE 'Later cohorts' END AS cohort_group,
-               week_offset, sum(retained_users) AS retained_users, sum(cohort_size) AS eligible_users,
+    "retention_by_era": """
+        SELECT CASE WHEN cohort_year <= 2014 THEN '2010-2014 cohorts' WHEN cohort_year <= 2019 THEN '2015-2019 cohorts'
+                    ELSE '2020-2023 cohorts' END AS cohort_era,
+               month_offset, sum(retained_users) AS retained_users, sum(cohort_size) AS eligible_users,
                round(sum(retained_users) / sum(cohort_size), 4) AS retention_rate
-        FROM analytics.agg_retention_cohort WHERE week_offset BETWEEN 1 AND 8
+        FROM a.agg_retention_cohort WHERE cohort_year BETWEEN 2010 AND 2023 AND month_offset BETWEEN 1 AND 12
         GROUP BY 1, 2 ORDER BY 1, 2""",
-    "question_funnel": """
-        SELECT asked_week, asked, answered, accepted,
+    "question_funnel_yearly": """
+        SELECT asked_year, asked, answered, accepted,
                round(answered / asked, 4) AS answered_rate, round(accepted / asked, 4) AS accepted_rate,
                median_hours_to_first_answer,
-               CASE WHEN all_mature THEN 'Mature (14+ days)' ELSE 'Too recent' END AS maturity
-        FROM analytics.agg_question_funnel_weekly ORDER BY 1""",
+               CASE WHEN asked_year = 2024 THEN 'Partial year (Jan-Mar 2024)' ELSE 'Full year' END AS coverage
+        FROM a.agg_question_funnel_yearly WHERE asked_year >= 2010 ORDER BY 1""",
     "tag_health": """
         SELECT tag, questions, answer_rate, accept_rate, median_hours_to_first_answer
-        FROM analytics.agg_tag_health WHERE questions >= 20 ORDER BY accept_rate""",
+        FROM a.agg_tag_health ORDER BY questions DESC LIMIT 15""",
+    "experiment_aa": """
+        SELECT CASE metric WHEN 'activated_28d' THEN '1. Activated in 28 days (primary)'
+                           WHEN 'asked_28d' THEN '2. Asked a question in 28 days'
+                           WHEN 'answered_28d' THEN '3. Answered in 28 days'
+                           ELSE '4. Actions in 28 days (guardrail)' END AS metric,
+               control_n, treatment_n, control_mean, treatment_mean, delta, ci_low, ci_high, p_value,
+               CASE WHEN significant THEN 'Significant' ELSE 'No difference' END AS verdict
+        FROM a.agg_experiment_results ORDER BY 1""",
     "sla_status": """
-        SELECT sla_type, dataset, description, observed, comparator || ' ' || threshold AS target,
+        SELECT sla_type, dataset, description, observed, comparator || ' ' || CAST(threshold AS VARCHAR) AS target,
                CASE WHEN passed THEN 'Met' ELSE 'Breach' END AS status
-        FROM ops.sla_results WHERE checked_at = (SELECT max(checked_at) FROM ops.sla_results)""",
+        FROM a.sla_results WHERE checked_at = (SELECT max(checked_at) FROM a.sla_results)""",
     "kpis": """
-        WITH m AS (SELECT * FROM analytics.fct_question_outcomes WHERE is_mature),
-        r AS (SELECT sum(retained_users)::DOUBLE / sum(cohort_size) AS w1 FROM analytics.agg_retention_cohort WHERE week_offset = 1)
+        WITH m AS (SELECT * FROM a.fct_question_outcomes WHERE is_mature),
+        r AS (SELECT sum(retained_users)::DOUBLE / sum(cohort_size) AS m1 FROM a.agg_retention_cohort WHERE month_offset = 1)
         SELECT * FROM (VALUES
-          (1, 'Accounts created', (SELECT count(*) FROM analytics.dim_user)::VARCHAR),
-          (2, 'Ever contributed', printf('%.1f%%', 100.0 * (SELECT count(DISTINCT user_key) FROM analytics.fct_user_events) / (SELECT count(*) FROM analytics.dim_user))),
-          (3, 'Week-1 contributor retention', printf('%.1f%%', 100 * (SELECT w1 FROM r))),
-          (4, 'Mature questions answered', printf('%.1f%%', 100.0 * (SELECT count(*) FROM m WHERE answers > 0) / (SELECT count(*) FROM m))),
-          (5, 'Have an accepted answer', printf('%.1f%%', 100.0 * (SELECT count(*) FROM m WHERE has_accepted_answer) / (SELECT count(*) FROM m))),
-          (6, 'Median hours to first answer', printf('%.1f', (SELECT median(hours_to_first_answer) FROM m)))
+          (1, 'accounts', format('{:,}', (SELECT count(*) FROM a.dim_user))),
+          (2, 'contributors', format('{:,}', (SELECT count(DISTINCT user_key) FROM a.fct_user_events))),
+          (3, 'user actions logged', format('{:,}', (SELECT count(*) FROM a.fct_user_events))),
+          (4, 'month-1 contributor retention', printf('%.1f%%', 100 * (SELECT m1 FROM r))),
+          (5, 'mature questions answered', printf('%.1f%%', 100.0 * (SELECT count(*) FROM m WHERE answers > 0) / (SELECT count(*) FROM m))),
+          (6, 'median hours to first answer', printf('%.1f', (SELECT median(hours_to_first_answer) FROM m)))
         ) t(sort_order, metric, value)""",
 }
 
-# Tableau column metadata per extract: name -> (datatype, role, type)
 DIM_S = ("string", "dimension", "nominal")
 DIM_D = ("date", "dimension", "ordinal")
 DIM_I = ("integer", "dimension", "ordinal")
 MEA_I = ("integer", "measure", "quantitative")
 MEA_R = ("real", "measure", "quantitative")
 COLS = {
-    "weekly_active_long": {"week_start": DIM_D, "segment": DIM_S, "contributors": MEA_I},
-    "retention_curve": {"cohort_group": DIM_S, "week_offset": DIM_I, "retained_users": MEA_I,
-                        "eligible_users": MEA_I, "retention_rate": MEA_R},
-    "question_funnel": {"asked_week": DIM_D, "asked": MEA_I, "answered": MEA_I, "accepted": MEA_I,
-                        "answered_rate": MEA_R, "accepted_rate": MEA_R,
-                        "median_hours_to_first_answer": MEA_R, "maturity": DIM_S},
+    "monthly_active_long": {"month_start": DIM_D, "segment": DIM_S, "contributors": MEA_I},
+    "retention_by_era": {"cohort_era": DIM_S, "month_offset": DIM_I, "retained_users": MEA_I,
+                         "eligible_users": MEA_I, "retention_rate": MEA_R},
+    "question_funnel_yearly": {"asked_year": DIM_I, "asked": MEA_I, "answered": MEA_I, "accepted": MEA_I,
+                               "answered_rate": MEA_R, "accepted_rate": MEA_R,
+                               "median_hours_to_first_answer": MEA_R, "coverage": DIM_S},
     "tag_health": {"tag": DIM_S, "questions": MEA_I, "answer_rate": MEA_R, "accept_rate": MEA_R,
                    "median_hours_to_first_answer": MEA_R},
+    "experiment_aa": {"metric": DIM_S, "control_n": MEA_I, "treatment_n": MEA_I, "control_mean": MEA_R,
+                      "treatment_mean": MEA_R, "delta": MEA_R, "ci_low": MEA_R, "ci_high": MEA_R,
+                      "p_value": MEA_R, "verdict": DIM_S},
     "sla_status": {"sla_type": DIM_S, "dataset": DIM_S, "description": DIM_S, "observed": MEA_R,
                    "target": DIM_S, "status": DIM_S},
     "kpis": {"sort_order": MEA_I, "metric": DIM_S, "value": DIM_S},
 }
 
-
-CAPTIONS = {"week_start": "Week", "asked_week": "Week asked", "contributors": "Contributors",
-            "segment": "Segment", "week_offset": "Weeks after first contribution",
-            "retention_rate": "Retention", "cohort_group": "Cohort", "asked": "Questions asked",
+CAPTIONS = {"month_start": "Month", "asked_year": "Year asked", "contributors": "Contributors",
+            "segment": "Segment", "month_offset": "Months after first contribution",
+            "retention_rate": "Retention", "cohort_era": "Cohort era", "asked": "Questions asked",
             "answered_rate": "Answered rate", "accept_rate": "Accept rate", "answer_rate": "Answer rate",
-            "maturity": "Maturity", "tag": "Tag", "questions": "Questions", "sla_type": "SLA type",
+            "coverage": "Coverage", "tag": "Tag", "questions": "Questions", "sla_type": "SLA type",
             "description": "Check", "target": "Target", "status": "Status", "observed": "Observed",
-            "metric": "Metric", "value": "Value", "accepted_rate": "Accepted rate"}
+            "metric": "Metric", "value": "Value", "accepted_rate": "Accepted rate",
+            "control_mean": "Control", "treatment_mean": "Treatment", "delta": "Delta",
+            "ci_low": "95% CI low", "ci_high": "95% CI high", "p_value": "p-value", "verdict": "Verdict"}
 PERCENT = {"retention_rate", "answered_rate", "accept_rate", "answer_rate", "accepted_rate"}
+
+LAKE_TABLES = {"agg_monthly_active": "analytics", "agg_retention_cohort": "analytics",
+               "agg_question_funnel_yearly": "analytics", "agg_tag_health": "analytics",
+               "agg_experiment_results": "analytics", "fct_question_outcomes": "analytics",
+               "dim_user": "analytics", "fct_user_events": "analytics", "sla_results": "ops"}
 
 
 def export():
     OUT.mkdir(exist_ok=True)
-    con = duckdb.connect(str(ROOT / "data" / "warehouse.duckdb"), read_only=True)
+    for f in OUT.glob("*.csv"):
+        f.unlink()
+    con = duckdb.connect()
+    con.execute("CREATE SCHEMA a")
+    for t, layer in LAKE_TABLES.items():
+        con.execute(f"CREATE VIEW a.{t} AS SELECT * FROM read_parquet('{LAKE / layer / t}/**/*.parquet', hive_partitioning = true)")
     for name, sql in EXTRACTS.items():
         rel = con.sql(sql)
         assert list(rel.columns) == list(COLS[name]), (name, rel.columns)
@@ -208,48 +233,50 @@ BLUE, AMBER, GREY, GREEN, RED = "#2f5d8a", "#c98a2b", "#b8c2cf", "#2e7d4f", "#b4
 
 
 def build_sheets():
-    sheet("Weekly Active Contributors", "weekly_active_long",
-          [("week_start", "None", "qk"), ("contributors", "Sum", "qk"), ("segment", "None", "nk")],
-          rows=[("contributors", "Sum", "qk")], cols=[("week_start", "None", "qk")], mark="Bar",
+    sheet("Monthly Active Contributors", "monthly_active_long",
+          [("month_start", "None", "qk"), ("contributors", "Sum", "qk"), ("segment", "None", "nk")],
+          rows=[("contributors", "Sum", "qk")], cols=[("month_start", "None", "qk")], mark="Area",
           encodings=[("color", ("segment", "None", "nk"))],
-          palette=(("segment", "None", "nk"), {"Returning": BLUE, "New this week": AMBER}),
-          subtitle="Blue = new this week, orange = returning. Users with 1+ attributable action that week.")
-    sheet("Contributor Retention", "retention_curve",
-          [("week_offset", "None", "ok"), ("retention_rate", "Sum", "qk"), ("cohort_group", "None", "nk")],
-          rows=[("retention_rate", "Sum", "qk")], cols=[("week_offset", "None", "ok")], mark="Line",
-          encodings=[("color", ("cohort_group", "None", "nk")), ("text", ("retention_rate", "Sum", "qk"))],
-          palette=(("cohort_group", "None", "nk"), {"Launch-week cohort": AMBER, "Later cohorts": BLUE}),
-          subtitle="Orange = launch-week cohort (87), blue = all later cohorts (377). Zero-return weeks count as 0.")
-    sheet("Questions Asked per Week", "question_funnel",
-          [("asked_week", "None", "qk"), ("asked", "Sum", "qk"), ("maturity", "None", "nk")],
-          rows=[("asked", "Sum", "qk")], cols=[("asked_week", "None", "qk")], mark="Bar",
-          encodings=[("color", ("maturity", "None", "nk"))],
-          palette=(("maturity", "None", "nk"), {"Mature (14+ days)": BLUE, "Too recent": GREY}),
-          subtitle="Orange = asked under 14 days before snapshot end, excluded from funnel rates.")
-    sheet("Answered Rate per Week", "question_funnel",
-          [("asked_week", "None", "qk"), ("answered_rate", "Sum", "qk"), ("maturity", "None", "nk")],
-          rows=[("answered_rate", "Sum", "qk")], cols=[("asked_week", "None", "qk")], mark="Circle",
-          encodings=[("color", ("maturity", "None", "nk"))],
-          palette=(("maturity", "None", "nk"), {"Mature (14+ days)": BLUE, "Too recent": GREY}),
-          subtitle="Share of questions with at least one answer. Orange = too recent to judge.")
-    sheet("Tag Accept Rate", "tag_health",
+          subtitle="Blue = first contribution that month, orange = returning. Peak 2017, declining since.")
+    sheet("Retention by Cohort Era", "retention_by_era",
+          [("month_offset", "None", "ok"), ("retention_rate", "Sum", "qk"), ("cohort_era", "None", "nk")],
+          rows=[("retention_rate", "Sum", "qk")], cols=[("month_offset", "None", "ok")], mark="Line",
+          encodings=[("color", ("cohort_era", "None", "nk"))],
+          subtitle="Share of each first-contribution cohort active again N months later. Blue 2010-14, orange 2015-19, red 2020-23.")
+    sheet("Questions Asked per Year", "question_funnel_yearly",
+          [("asked_year", "None", "ok"), ("asked", "Sum", "qk"), ("coverage", "None", "nk")],
+          rows=[("asked", "Sum", "qk")], cols=[("asked_year", "None", "ok")], mark="Bar",
+          encodings=[("color", ("coverage", "None", "nk"))],
+          subtitle="Orange = 2024, partial year (dump ends 2024-03-31).")
+    sheet("Answered Rate per Year", "question_funnel_yearly",
+          [("asked_year", "None", "ok"), ("answered_rate", "Sum", "qk"), ("accepted_rate", "Sum", "qk")],
+          rows=[("answered_rate", "Sum", "qk")], cols=[("asked_year", "None", "ok")], mark="Line",
+          encodings=[("text", ("answered_rate", "Sum", "qk"))],
+          subtitle="Share of questions with at least one answer, by year asked.")
+    sheet("Top Tags: Accept Rate", "tag_health",
           [("tag", "None", "nk"), ("accept_rate", "Sum", "qk"), ("questions", "Sum", "qk")],
           rows=[("tag", "None", "nk")], cols=[("accept_rate", "Sum", "qk")], mark="Bar",
           encodings=[("text", ("accept_rate", "Sum", "qk")), ("tooltip", ("questions", "Sum", "qk"))],
           sort=(("tag", "None", "nk"), ("accept_rate", "Sum", "qk"), "DESC"),
-          subtitle="Tags with 20+ mature questions.")
+          subtitle="15 highest-volume tags, mature questions only.")
+    sheet("A/A Test: Experiment Pipeline Check", "experiment_aa",
+          [("metric", "None", "nk"), ("verdict", "None", "nk"), ("control_mean", "Sum", "qk"),
+           ("treatment_mean", "Sum", "qk"), ("p_value", "Sum", "qk")],
+          rows=[("metric", "None", "nk"), ("verdict", "None", "nk")], cols=[], mark="Text",
+          encodings=[("text", ("control_mean", "Sum", "qk")), ("text", ("treatment_mean", "Sum", "qk")),
+                     ("text", ("p_value", "Sum", "qk"))],
+          subtitle="24,587 real 2023 sign-ups, hash-split 50/50, no treatment. Text = control | treatment | p-value.")
     sheet("Dataset SLAs", "sla_status",
           [("sla_type", "None", "nk"), ("description", "None", "nk"), ("target", "None", "nk"),
            ("status", "None", "nk"), ("observed", "Sum", "qk")],
           rows=[("sla_type", "None", "nk"), ("description", "None", "nk"), ("target", "None", "nk"),
                 ("status", "None", "nk")], cols=[], mark="Text",
-          encodings=[("text", ("observed", "Sum", "qk")), ("color", ("status", "None", "nk"))],
-          palette=(("status", "None", "nk"), {"Met": GREEN, "Breach": RED}),
-          subtitle="Checked on every pipeline run; any breach fails the Airflow run.")
+          encodings=[("text", ("observed", "Sum", "qk"))],
+          subtitle="Checked on every pipeline run; any breach fails the run.")
 
 
 def dashboard():
-    # 1400 x 1100 fixed. Rows: KPIs | WAC + Retention | Asked + Answered | Tags + SLAs
+    # 1400 x 1100 fixed. Rows: KPIs | activity + retention | asked + answered | tags + A/A + SLAs
     W, H = 1400, 1100
     # Zone geometry is in Tableau's 0-100000 relative units, not pixels.
     sx = lambda px: round(px * 100000 / W)
@@ -258,9 +285,9 @@ def dashboard():
     z = []
     z.append(f"<zone h='{sy(50)}' id='{next(zid)}' type-v2='title' w='100000' x='0' y='0' />")
     layout = [
-        (200, 290, [("Weekly Active Contributors", 700), ("Contributor Retention", 700)]),
-        (490, 260, [("Questions Asked per Week", 700), ("Answered Rate per Week", 700)]),
-        (750, 350, [("Tag Accept Rate", 560), ("Dataset SLAs", 840)]),
+        (150, 300, [("Monthly Active Contributors", 700), ("Retention by Cohort Era", 700)]),
+        (450, 260, [("Questions Asked per Year", 700), ("Answered Rate per Year", 700)]),
+        (710, 390, [("Top Tags: Accept Rate", 420), ("A/A Test: Experiment Pipeline Check", 480), ("Dataset SLAs", 500)]),
     ]
     for y, h, cells in layout:
         x = 0
@@ -271,14 +298,14 @@ def dashboard():
     rows = list(csv.DictReader(open(OUT / "kpis.csv")))
     runs = "".join(
         f"<run bold='true' fontcolor='#1c2230' fontsize='18'>{r['value']}</run>"
-        f"<run fontcolor='#5d6678' fontsize='11'> {r['metric'].lower()}{'    |    ' if i < len(rows) - 1 else ''}</run>"
+        f"<run fontcolor='#5d6678' fontsize='11'> {r['metric']}{'    |    ' if i < len(rows) - 1 else ''}</run>"
         for i, r in enumerate(rows))
-    note = ("<run fontcolor='#5d6678' fontsize='10'>&#10;AI Stack Exchange public data dump, Aug 2 - Dec 11, 2016. "
-            "Mature questions = asked 14+ days before snapshot end.</run>")
-    z.insert(1, f"<zone h='{sy(150)}' id='{next(zid)}' type-v2='text' w='100000' x='0' y='{sy(50)}'>"
+    note = ("<run fontcolor='#5d6678' fontsize='10'>&#10;Cross Validated (stats.stackexchange.com) public data dump, "
+            "Feb 2009 - Mar 31, 2024. Built with PySpark. Mature questions = asked 14+ days before snapshot end.</run>")
+    z.insert(1, f"<zone h='{sy(100)}' id='{next(zid)}' type-v2='text' w='100000' x='0' y='{sy(50)}'>"
                 f"<formatted-text>{runs}{note}</formatted-text></zone>")
     zones = "\n          ".join(z)
-    return f"""    <dashboard name='Q&amp;A Launch Health'>
+    return f"""    <dashboard name='Q&amp;A Community Health'>
       <size maxheight='{H}' maxwidth='{W}' minheight='{H}' minwidth='{W}' sizing-mode='fixed' />
       <datasources />
       <zones>
@@ -295,7 +322,7 @@ def windows():
     for name, _ in SHEETS:
         out.append(f"    <window class='worksheet' hidden='true' name={quoteattr(name)}><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{{{str(uuid.uuid4()).upper()}}}' /></window>")
     vps = "".join(f"<viewpoint name={quoteattr(n)} />" for n, _ in SHEETS)
-    out.append(f"    <window class='dashboard' maximized='true' name='Q&amp;A Launch Health'><viewpoints>{vps}</viewpoints><active id='-1' /><simple-id uuid='{{{str(uuid.uuid4()).upper()}}}' /></window>")
+    out.append(f"    <window class='dashboard' maximized='true' name='Q&amp;A Community Health'><viewpoints>{vps}</viewpoints><active id='-1' /><simple-id uuid='{{{str(uuid.uuid4()).upper()}}}' /></window>")
     return "\n".join(out)
 
 

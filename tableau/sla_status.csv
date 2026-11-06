@@ -1,14 +1,17 @@
 sla_type,dataset,description,observed,target,status
+integrity,analytics.fct_question_outcomes,answers whose parent question is missing,0.0,== 0.0,Met
+integrity,analytics.bridge_question_tag,question tags not in the Tags table,0.0,== 0.0,Met
+validity,analytics.fct_question_outcomes,negative time-to-first-answer rows,0.0,== 0.0,Met
+validity,analytics.fct_question_outcomes,answers predating their question outside merged questions,0.0,== 0.0,Met
+validity,analytics.agg_retention_cohort,"retention rates outside [0,1] or month-0 not 1.0",0.0,== 0.0,Met
+completeness,analytics.agg_retention_cohort,cohort-month offsets missing from the retention grid,0.0,== 0.0,Met
+validity,analytics.agg_experiment_results,experiment sample-ratio mismatch (min SRM p-value; must be >= 0.001),0.9238,>= 0.001,Met
+privacy,analytics.*,PII / raw-id columns present in analytics tables,0.0,== 0.0,Met
 freshness,analytics.fct_user_events,days between latest event and source snapshot end,0.0,<= 1.0,Met
+completeness,raw.*,"landed rows minus source rows, all 8 tables (from ingest audit)",0.0,== 0.0,Met
 completeness,stg.votes,raw votes minus (staged + quarantined),0.0,== 0.0,Met
 completeness,analytics.fct_user_events,owned questions+answers missing from event log,0.0,== 0.0,Met
 completeness,analytics.fct_user_events,attributed comments missing from event log,0.0,== 0.0,Met
 uniqueness,analytics.fct_user_events,duplicate event_id rows,0.0,== 0.0,Met
 uniqueness,analytics.dim_user,duplicate user_key rows,0.0,== 0.0,Met
-integrity,analytics.fct_user_events,events whose user_key is not in dim_user,0.0,<= 0.0,Met
-integrity,analytics.fct_question_outcomes,answers whose parent question is missing,0.0,== 0.0,Met
-validity,analytics.fct_question_outcomes,negative time-to-first-answer rows,0.0,== 0.0,Met
-validity,analytics.agg_retention_cohort,"retention rates outside [0,1]",0.0,== 0.0,Met
-validity,analytics.agg_retention_cohort,week-0 retention not equal to 1.0,0.0,== 0.0,Met
-completeness,analytics.agg_retention_cohort,cohort-week offsets missing from the retention grid,0.0,== 0.0,Met
-privacy,analytics.*,PII / raw-id columns present in analytics schema,0.0,== 0.0,Met
+integrity,analytics.fct_user_events,events whose user_key is not in dim_user,0.0,== 0.0,Met

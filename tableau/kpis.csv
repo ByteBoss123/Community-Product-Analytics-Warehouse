@@ -1,7 +1,7 @@
 sort_order,metric,value
-1,Accounts created,3156
-2,Ever contributed,15.2%
-3,Week-1 contributor retention,21.6%
-4,Mature questions answered,89.9%
-5,Have an accepted answer,52.7%
-6,Median hours to first answer,3.2
+1,accounts,"345,753"
+2,contributors,"114,528"
+3,user actions logged,"1,751,986"
+4,month-1 contributor retention,13.0%
+5,mature questions answered,68.0%
+6,median hours to first answer,3.2

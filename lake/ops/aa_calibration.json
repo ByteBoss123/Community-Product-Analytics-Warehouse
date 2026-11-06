@@ -1,0 +1,86 @@
+{
+ "experiment_id": "aa_onboarding_2023",
+ "population": "accounts created in 2023",
+ "users": 24587,
+ "control_n": 12286,
+ "treatment_n": 12301,
+ "srm_p_value": 0.9238,
+ "alpha": 0.05,
+ "resalts": 1000,
+ "srm_failures_at_p_lt_0.001": 0,
+ "false_positive_rate": {
+  "activated_28d": 0.036,
+  "asked_28d": 0.044,
+  "answered_28d": 0.047,
+  "events_28d": 0.046
+ },
+ "fpr_95ci_halfwidth": 0.0135,
+ "pvalue_uniformity_ks_p": {
+  "activated_28d": 0.157,
+  "asked_28d": 0.4612,
+  "answered_28d": 0.3076,
+  "events_28d": 0.5459
+ },
+ "results_canonical_split": [
+  {
+   "metric": "activated_28d",
+   "metric_type": "binary",
+   "control_n": 12286,
+   "treatment_n": 12301,
+   "control_mean": 0.236041,
+   "treatment_mean": 0.236322,
+   "delta": 0.000281,
+   "ci_low": -0.010337,
+   "ci_high": 0.010899,
+   "p_value": 0.9586,
+   "significant": false,
+   "experiment_id": "aa_onboarding_2023",
+   "srm_p_value": 0.9238
+  },
+  {
+   "metric": "asked_28d",
+   "metric_type": "binary",
+   "control_n": 12286,
+   "treatment_n": 12301,
+   "control_mean": 0.197298,
+   "treatment_mean": 0.200959,
+   "delta": 0.003662,
+   "ci_low": -0.006322,
+   "ci_high": 0.013645,
+   "p_value": 0.4722,
+   "significant": false,
+   "experiment_id": "aa_onboarding_2023",
+   "srm_p_value": 0.9238
+  },
+  {
+   "metric": "answered_28d",
+   "metric_type": "binary",
+   "control_n": 12286,
+   "treatment_n": 12301,
+   "control_mean": 0.030767,
+   "treatment_mean": 0.028941,
+   "delta": -0.001826,
+   "ci_low": -0.00608,
+   "ci_high": 0.002429,
+   "p_value": 0.4002,
+   "significant": false,
+   "experiment_id": "aa_onboarding_2023",
+   "srm_p_value": 0.9238
+  },
+  {
+   "metric": "events_28d",
+   "metric_type": "count",
+   "control_n": 12286,
+   "treatment_n": 12301,
+   "control_mean": 0.724483,
+   "treatment_mean": 0.740428,
+   "delta": 0.015944,
+   "ci_low": -0.044151,
+   "ci_high": 0.07604,
+   "p_value": 0.6031,
+   "significant": false,
+   "experiment_id": "aa_onboarding_2023",
+   "srm_p_value": 0.9238
+  }
+ ]
+}

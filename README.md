@@ -1,14 +1,53 @@
 # Community Product Analytics Warehouse
 
 Product-analytics data engineering on a real community Q&A product: logging spec, event model,
-star schema, product metric marts, dataset SLAs, privacy tiers, Airflow orchestration, and a
-data-story dashboard.
+dimensional model, product metric marts, dataset SLAs, privacy tiers, an A/A-validated experiment
+layer, orchestration, and a Tableau data-story dashboard.
 
-**Data:** public Stack Exchange data dump for Artificial Intelligence Stack Exchange, covering the
-site's first 19 weeks (2016-08-02 to 2016-12-11), CC BY-SA. Mirrored in
-[`bigdata-vandy/stack-ex`](https://github.com/bigdata-vandy/stack-ex) @ `a9ad674`; every file's
-SHA-256 is recorded in `data/SHA256SUMS` and verified at ingest.
-Scale: 1,279 posts, 1,165 comments, 5,323 votes, 3,612 post-history rows, 3,157 users.
+## v2: full Cross Validated history in PySpark (`spark/`)
+
+**Data:** the public Stack Exchange data dump for Cross Validated (stats.stackexchange.com),
+Feb 2009 to 2024-03-31, CC BY-SA, downloaded from archive.org (`stats.stackexchange.com.7z`,
+SHA-256 `09e73827b20d9161ee3ff3d898dffe0cd9f12c9b79ceaa5d5fea50480ba5c2de`).
+Posts, Comments and PostHistory were column-projected on the source machine with
+`spark/compact_extract.py` (free text dropped, 3.4 GB of XML to 42 MB); the other five files are
+loaded as-is. Landed row counts match the source exactly for all 8 tables (`lake/ops/ingest_audit.json`):
+425,735 posts, 1,747,225 votes, 819,648 comments, 1,525,713 post-history rows, 345,754 users,
+612,258 badges, 86,919 post links, 1,612 tags (5.56M rows).
+
+```
+spark/00_land_raw.py      XML + compact TSV -> typed raw Parquet, ingest audit
+spark/01_transform.py     Spark SQL: stg -> quarantine / restricted / analytics (events partitioned by year)
+spark/02_sla.py           16 dataset SLAs, results appended to lake/ops/sla_results, breach exits non-zero
+spark/03_experiment_aa.py A/A validation of the experiment metrics pipeline
+src/build_tableau.py      Tableau extracts + .twb from the lake
+```
+
+Results (all from the lake):
+- 1,751,986 attributable user actions from 114,528 contributors; 345,753 accounts.
+- Monthly active contributors peaked in 2017 (avg 2,391/month) and fell to 1,567/month in 2023.
+- Month-1 contributor retention: 16.9% for 2010-14 cohorts, 12.6% for 2015-19, 11.0% for 2020-23;
+  month-12: 4.7%, 2.7%, 1.8%.
+- Share of questions answered: 99.1% (2010), 70.1% (2016), 46.6% (2023).
+- 148,072 votes reference deleted posts and are quarantined, not dropped.
+
+**A/A experiment validation.** 24,587 real 2023 sign-ups split 50/50 by salted hash
+(12,286 / 12,301, SRM p = 0.9238); outcomes are their real 28-day behaviour and no treatment was applied.
+No metric differed (primary: activation 23.60% vs 23.63%, p = 0.9586). Re-drawing the split with
+1,000 salts gave false-positive rates of 3.6%, 4.4%, 4.7%, 4.6% at alpha 0.05 (expected 5% +/- 1.35 pts; activation
+sits slightly below the band, i.e. conservative), 0 SRM failures, and uniform p-values (KS p > 0.15).
+
+**Data issue caught by an SLA.** The validity check on time-to-first-answer fired on 25 questions whose
+first answer predated the question. All 25 are merge destinations (PostHistoryTypeId 38) that inherited
+answers from an older duplicate. Time-to-first-answer now counts only answers posted after the question,
+merges are flagged, and a new SLA fails if an early answer appears on a non-merged question.
+
+Run: `python3 spark/00_land_raw.py <dump_dir> && python3 spark/01_transform.py && python3 spark/02_sla.py && python3 spark/03_experiment_aa.py`
+
+## v1: 19-week launch sample in DuckDB (`src/`, `sql/`, `dags/`)
+
+The original build on Artificial Intelligence Stack Exchange's first 19 weeks (Aug-Dec 2016), kept
+as a small, fast dev environment with the Airflow DAG.
 
 ## Pipeline
 
@@ -57,17 +96,20 @@ cohort × offset grid, and an SLA check fails if any cell is missing.
 
 ## Tableau dashboard
 
-`tableau/Community_Product_Analytics.twb` (Tableau 2026.2) reads the six CSV extracts in `tableau/`,
-generated from the warehouse by `src/build_tableau.py`. Dashboard "Q&A Launch Health": KPI strip,
-weekly active contributors, cohort retention, questions asked, answered rate, tag accept rate, SLA status.
+`tableau/Community_Product_Analytics.twb` (Tableau 2026.2) reads the seven CSV extracts in `tableau/`,
+generated from the v2 Spark lake by `src/build_tableau.py`. Dashboard "Q&A Community Health": KPI strip,
+monthly active contributors, retention by cohort era, questions asked and answered rate per year,
+top-tag accept rates, A/A experiment check, SLA status.
 The CSV folder path is set in the workbook; if you move the folder, re-point it via Data > Edit Data Source.
 
-![Tableau dashboard](docs/img/tableau_dashboard.jpg)
+Screenshot below is the v1 dashboard (19-week sample); the v2 screenshot replaces it once re-rendered.
+
+![Tableau dashboard (v1)](docs/img/tableau_dashboard.jpg)
 
 ## Verification
 
 - `python3 src/pipeline.py`: full build, 13/13 SLAs met.
-- `pytest tests`: 8 tests, including breach tests that inject a duplicate event, a PII column,
+- `pytest tests`: 15 tests (8 DuckDB + 7 Spark), including breach tests that inject a duplicate event, a PII column,
   a truncated load and a dropped vote, and confirm the matching SLA fails.
 - `airflow dags test community_product_analytics` (Airflow 3.1.8): all 4 tasks succeeded.
 
