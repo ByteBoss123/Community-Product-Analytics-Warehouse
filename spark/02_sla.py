@@ -60,6 +60,8 @@ CHECKS = [
      " FROM analytics_agg_retention_cohort GROUP BY 1) WHERE n <> mx + 1", "==", 0),
     ("analytics.agg_experiment_results", "validity", "experiment sample-ratio mismatch (min SRM p-value; must be >= 0.001)",
      "SELECT coalesce(min(srm_p_value), 0) FROM analytics_agg_experiment_results", ">=", 0.001),
+    ("logs.events", "completeness", "logged events not reconciled with warehouse (both directions + field mismatches)",
+     "SELECT {log_gap}", "==", 0),
     ("analytics.*", "privacy", "PII / raw-id columns present in analytics tables", "SELECT {pii_count}", "==", 0),
 ]
 OPS = {"<=": lambda a, b: a <= b, "==": lambda a, b: a == b, ">=": lambda a, b: a >= b}
@@ -80,10 +82,14 @@ def register_all(spark):
 def run(spark, ingest_audit=None):
     audit = ingest_audit or json.loads((LAKE / "ops" / "ingest_audit.json").read_text())
     ingest_gap = sum(abs(v["rows"] - v["source_rows"]) for v in audit.values())
+    rec_f = LAKE / "ops" / "log_reconciliation.json"
+    rec = json.loads(rec_f.read_text()) if rec_f.exists() else None
+    log_gap = (-1 if rec is None else rec["logged_not_in_warehouse"] + rec["warehouse_not_in_logged"]
+               + rec["name_or_actor_mismatches"] + rec["timestamp_mismatches"] + abs(rec["logged_rows"] - rec["warehouse_rows"]))
     pii = sum(len(PII_COLUMNS & set(spark.table(f"analytics_{t}").columns)) for t in ANALYTICS_TABLES)
     results = []
     for dataset, kind, desc, sql, op, thr in CHECKS:
-        observed = spark.sql(sql.format(ingest_gap=ingest_gap, pii_count=pii)).collect()[0][0]
+        observed = spark.sql(sql.format(ingest_gap=ingest_gap, pii_count=pii, log_gap=log_gap)).collect()[0][0]
         results.append((dataset, kind, desc, float(observed), op, float(thr), OPS[op](observed, thr)))
     return results
 

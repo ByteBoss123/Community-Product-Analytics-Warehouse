@@ -1,0 +1,23 @@
+{
+ "emitted": {
+  "question_posted": 210226,
+  "answer_posted": 206435,
+  "comment_posted": 806139,
+  "answer_accepted": 70329,
+  "post_edited": 452432,
+  "vote_cast": 6425
+ },
+ "emitted_total": 1751986,
+ "rejected": {
+  "vote_cast: data must contain ['actor_key'] properties": 1478794,
+  "answer_posted: data must contain ['actor_key'] properties": 2551,
+  "comment_posted: data must contain ['actor_key'] properties": 13509,
+  "question_posted: data must contain ['actor_key'] properties": 3535,
+  "answer_accepted: data must contain ['actor_key'] properties": 1151,
+  "post_edited: data must contain ['actor_key'] properties": 28253
+ },
+ "rejected_total": 1527793,
+ "duplicates_dropped": 0,
+ "replayed": 3279779,
+ "seconds": 49.5
+}

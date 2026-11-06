@@ -18,8 +18,10 @@ loaded as-is. Landed row counts match the source exactly for all 8 tables (`lake
 ```
 spark/00_land_raw.py      XML + compact TSV -> typed raw Parquet, ingest audit
 spark/01_transform.py     Spark SQL: stg -> quarantine / restricted / analytics (events partitioned by year)
-spark/02_sla.py           16 dataset SLAs, results appended to lake/ops/sla_results, breach exits non-zero
+spark/02_sla.py           17 dataset SLAs, results appended to lake/ops/sla_results, breach exits non-zero
 spark/03_experiment_aa.py A/A validation of the experiment metrics pipeline
+spark/04_ingest_logs.py   Spark ingest of the logging sink, reconciled against the warehouse
+logging_client/           v2 event contracts (JSON Schema), validating logger with dead letter, real-data replay
 src/build_tableau.py      Tableau extracts + .twb from the lake
 ```
 
@@ -30,6 +32,11 @@ Results (all from the lake):
   month-12: 4.7%, 2.7%, 1.8%.
 - Share of questions answered: 99.1% (2010), 70.1% (2016), 46.6% (2023).
 - 148,072 votes reference deleted posts and are quarantined, not dropped.
+
+**Event logging, implemented.** A validating logging client (JSON Schema contracts, dedupe,
+dead-letter queue) replayed all 3,279,779 historical actions: 1,751,986 accepted and reconciled
+exactly with the warehouse (0 mismatches), 1,527,793 (46.6%) rejected for having no actor, 97% of
+them anonymous votes. Details: `docs/logging_spec.md` section 6.
 
 **A/A experiment validation.** 24,587 real 2023 sign-ups split 50/50 by salted hash
 (12,286 / 12,301, SRM p = 0.9238); outcomes are their real 28-day behaviour and no treatment was applied.
@@ -112,7 +119,7 @@ v1 dashboard on the 19-week sample: [docs/img/tableau_dashboard.jpg](docs/img/ta
 ## Verification
 
 - `python3 src/pipeline.py`: full build, 13/13 SLAs met.
-- `pytest tests`: 15 tests (8 DuckDB + 7 Spark), including breach tests that inject a duplicate event, a PII column,
+- `pytest tests`: 23 tests (8 DuckDB + 7 Spark SLA + 8 logging client), including breach tests that inject a duplicate event, a PII column,
   a truncated load and a dropped vote, and confirm the matching SLA fails.
 - `airflow dags test community_product_analytics` (Airflow 3.1.8): all 4 tasks succeeded.
 

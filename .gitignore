@@ -8,3 +8,4 @@ lake/quarantine/
 lake/restricted/
 lake/analytics/
 lake/ops/sla_results/
+lake/logs/

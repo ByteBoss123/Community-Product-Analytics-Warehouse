@@ -1,0 +1,9 @@
+{
+ "logged_rows": 1751986,
+ "warehouse_rows": 1751986,
+ "logged_not_in_warehouse": 0,
+ "warehouse_not_in_logged": 0,
+ "name_or_actor_mismatches": 0,
+ "timestamp_mismatches": 0,
+ "partitions": 16
+}

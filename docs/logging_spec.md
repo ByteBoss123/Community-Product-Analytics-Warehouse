@@ -73,3 +73,37 @@ Enforced by SLA check `privacy`: zero PII or raw-id columns in the `analytics` s
 | pipeline run | end-to-end run time (Airflow `dagrun_timeout`) | 2 hours |
 
 Every check writes a row to `ops.sla_results`; any breach fails the Airflow `sla_checks` task.
+
+## 6. Implementation (v2 contract, `logging_client/`)
+
+The spec above is implemented as a client-side logger and exercised on real data.
+
+- `contracts.py` defines a JSON Schema per event (`logging_client/contracts/*.v2.json`): a shared
+  envelope (`event_id`, `event_name`, `schema_version`, millisecond `event_ts`, pseudonymous
+  `actor_key`, `client`) plus per-event properties, with `additionalProperties: false`.
+- `logger.py` validates each event before it is emitted, drops duplicate `event_id`s, writes
+  accepted events as JSONL partitioned by `event_date`, and sends rejects to a dead-letter sink
+  with the validation error.
+- `replay.py` replays the full Cross Validated history (3,279,779 actions incl. all votes) through
+  the logger in event-time order (51 s).
+- `spark/04_ingest_logs.py` ingests the sink with Spark into `analytics.fct_logged_events` and
+  reconciles it against `fct_user_events`.
+
+Results (`lake/ops/logging_replay.json`, `lake/ops/log_reconciliation.json`):
+
+| | Events |
+|---|---|
+| Replayed | 3,279,779 |
+| Accepted by the v2 contract | 1,751,986 |
+| Rejected to dead letter | 1,527,793 (46.6%) |
+| of which anonymous up/down votes (no voter id) | 1,478,794 |
+| of which actions by deleted accounts (no actor) | 48,999 |
+| Duplicates dropped | 0 |
+
+Logged events reconcile exactly with the warehouse: 1,751,986 rows each, 0 ids missing in either
+direction, 0 event-name, actor or timestamp mismatches. The SLA suite fails if that ever drifts.
+
+The replay quantifies gap 1 in section 3: under a contract that requires an actor on every event,
+46.6% of historical actions are unattributable, 97% of them votes. Two limits: the format check
+cannot detect that historical vote timestamps were truncated to the day (they replay as
+`00:00:00.000Z`), and the replay client is `replay`, not a live product surface.
