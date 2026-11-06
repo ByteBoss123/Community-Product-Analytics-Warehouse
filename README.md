@@ -102,9 +102,12 @@ monthly active contributors, retention by cohort era, questions asked and answer
 top-tag accept rates, A/A experiment check, SLA status.
 The CSV folder path is set in the workbook; if you move the folder, re-point it via Data > Edit Data Source.
 
-Screenshot below is the v1 dashboard (19-week sample); the v2 screenshot replaces it once re-rendered.
+The 2024 points cover Jan-Mar only; some of those questions are under 14 days old, so the 2024
+answered rate is not comparable to full years.
 
-![Tableau dashboard (v1)](docs/img/tableau_dashboard.jpg)
+![Tableau dashboard (v2, full history)](docs/img/tableau_dashboard_v2.jpg)
+
+v1 dashboard on the 19-week sample: [docs/img/tableau_dashboard.jpg](docs/img/tableau_dashboard.jpg)
 
 ## Verification
 

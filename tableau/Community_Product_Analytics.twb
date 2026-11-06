@@ -111,28 +111,14 @@
         <relation connection='textscan.experiment_aa' name='experiment_aa.csv' table='[experiment_aa#csv]' type='table'>
           <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
             <column datatype='string' name='metric' ordinal='0' />
-            <column datatype='integer' name='control_n' ordinal='1' />
-            <column datatype='integer' name='treatment_n' ordinal='2' />
-            <column datatype='real' name='control_mean' ordinal='3' />
-            <column datatype='real' name='treatment_mean' ordinal='4' />
-            <column datatype='real' name='delta' ordinal='5' />
-            <column datatype='real' name='ci_low' ordinal='6' />
-            <column datatype='real' name='ci_high' ordinal='7' />
-            <column datatype='real' name='p_value' ordinal='8' />
-            <column datatype='string' name='verdict' ordinal='9' />
+            <column datatype='string' name='stat' ordinal='1' />
+            <column datatype='string' name='value' ordinal='2' />
           </columns>
         </relation>
       </connection>
       <column caption="Metric" datatype='string' name='[metric]' role='dimension' type='nominal' />
-      <column datatype='integer' name='[control_n]' role='measure' type='quantitative' />
-      <column datatype='integer' name='[treatment_n]' role='measure' type='quantitative' />
-      <column caption="Control" datatype='real' name='[control_mean]' role='measure' type='quantitative' />
-      <column caption="Treatment" datatype='real' name='[treatment_mean]' role='measure' type='quantitative' />
-      <column caption="Delta" datatype='real' name='[delta]' role='measure' type='quantitative' />
-      <column caption="95% CI low" datatype='real' name='[ci_low]' role='measure' type='quantitative' />
-      <column caption="95% CI high" datatype='real' name='[ci_high]' role='measure' type='quantitative' />
-      <column caption="p-value" datatype='real' name='[p_value]' role='measure' type='quantitative' />
-      <column caption="Verdict" datatype='string' name='[verdict]' role='dimension' type='nominal' />
+      <column caption="Group" datatype='string' name='[stat]' role='dimension' type='nominal' />
+      <column caption="Value" datatype='string' name='[value]' role='dimension' type='nominal' />
     </datasource>
     <datasource caption='sla_status' inline='true' name='federated.sla_status' version='18.1'>
       <connection class='federated'>
@@ -206,7 +192,7 @@
         <rows>[federated.monthly_active_long].[sum:contributors:qk]</rows>
         <cols>[federated.monthly_active_long].[none:month_start:qk]</cols>
       </table>
-      <simple-id uuid='{17BBA9DB-2338-410C-9C93-67EBB8C8816B}' />
+      <simple-id uuid='{9D6BC8B3-C0F1-4482-AD7F-40E1C412686E}' />
     </worksheet>
     <worksheet name="Retention by Cohort Era">
       <layout-options><title><formatted-text><run bold='true'>Retention by Cohort Era</run><run fontsize='9' fontcolor='#6b7280'>&#10;Share of each first-contribution cohort active again N months later. Blue 2010-14, orange 2015-19, red 2020-23.</run></formatted-text></title></layout-options>
@@ -234,7 +220,7 @@
         <rows>[federated.retention_by_era].[sum:retention_rate:qk]</rows>
         <cols>[federated.retention_by_era].[none:month_offset:ok]</cols>
       </table>
-      <simple-id uuid='{DAAC4874-9F71-465C-9D9D-0396882D764F}' />
+      <simple-id uuid='{4E7F8369-30CE-46A6-9FCD-AA9B1ABC66F5}' />
     </worksheet>
     <worksheet name="Questions Asked per Year">
       <layout-options><title><formatted-text><run bold='true'>Questions Asked per Year</run><run fontsize='9' fontcolor='#6b7280'>&#10;Orange = 2024, partial year (dump ends 2024-03-31).</run></formatted-text></title></layout-options>
@@ -262,7 +248,7 @@
         <rows>[federated.question_funnel_yearly].[sum:asked:qk]</rows>
         <cols>[federated.question_funnel_yearly].[none:asked_year:ok]</cols>
       </table>
-      <simple-id uuid='{B77698BD-2E7D-4F8C-8EEE-84B7ED280BFD}' />
+      <simple-id uuid='{4F5962A8-E73C-47F8-83B0-36F124FDC796}' />
     </worksheet>
     <worksheet name="Answered Rate per Year">
       <layout-options><title><formatted-text><run bold='true'>Answered Rate per Year</run><run fontsize='9' fontcolor='#6b7280'>&#10;Share of questions with at least one answer, by year asked.</run></formatted-text></title></layout-options>
@@ -290,7 +276,7 @@
         <rows>[federated.question_funnel_yearly].[sum:answered_rate:qk]</rows>
         <cols>[federated.question_funnel_yearly].[none:asked_year:ok]</cols>
       </table>
-      <simple-id uuid='{D1D6FA3E-E9F7-474C-BBAA-F7F264483390}' />
+      <simple-id uuid='{19508E12-525D-41D9-B519-517045BE6B60}' />
     </worksheet>
     <worksheet name="Top Tags: Accept Rate">
       <layout-options><title><formatted-text><run bold='true'>Top Tags: Accept Rate</run><run fontsize='9' fontcolor='#6b7280'>&#10;15 highest-volume tags, mature questions only.</run></formatted-text></title></layout-options>
@@ -320,24 +306,20 @@
         <rows>[federated.tag_health].[none:tag:nk]</rows>
         <cols>[federated.tag_health].[sum:accept_rate:qk]</cols>
       </table>
-      <simple-id uuid='{BB366D9C-97A7-4856-A99A-D6E878F358EB}' />
+      <simple-id uuid='{32BF69A6-B307-4408-985E-429BB4ED266B}' />
     </worksheet>
-    <worksheet name="A/A Test: Experiment Pipeline Check">
-      <layout-options><title><formatted-text><run bold='true'>A/A Test: Experiment Pipeline Check</run><run fontsize='9' fontcolor='#6b7280'>&#10;24,587 real 2023 sign-ups, hash-split 50/50, no treatment. Text = control | treatment | p-value.</run></formatted-text></title></layout-options>
+    <worksheet name="A/A Experiment Check">
+      <layout-options><title><formatted-text><run bold='true'>A/A Experiment Check</run><run fontsize='9' fontcolor='#6b7280'>&#10;24,587 real 2023 sign-ups, hash-split 50/50, no treatment. No metric differs.</run></formatted-text></title></layout-options>
       <table>
         <view>
           <datasources><datasource caption='experiment_aa' name='federated.experiment_aa' /></datasources>
           <datasource-dependencies datasource='federated.experiment_aa'>
             <column datatype='string' name='[metric]' role='dimension' type='nominal' />
-            <column datatype='string' name='[verdict]' role='dimension' type='nominal' />
-            <column datatype='real' name='[control_mean]' role='measure' type='quantitative' />
-            <column datatype='real' name='[treatment_mean]' role='measure' type='quantitative' />
-            <column datatype='real' name='[p_value]' role='measure' type='quantitative' />
+            <column datatype='string' name='[stat]' role='dimension' type='nominal' />
+            <column datatype='string' name='[value]' role='dimension' type='nominal' />
             <column-instance column='[metric]' derivation='None' name='[none:metric:nk]' pivot='key' type='nominal' />
-            <column-instance column='[verdict]' derivation='None' name='[none:verdict:nk]' pivot='key' type='nominal' />
-            <column-instance column='[control_mean]' derivation='Sum' name='[sum:control_mean:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[treatment_mean]' derivation='Sum' name='[sum:treatment_mean:qk]' pivot='key' type='quantitative' />
-            <column-instance column='[p_value]' derivation='Sum' name='[sum:p_value:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[stat]' derivation='None' name='[none:stat:nk]' pivot='key' type='nominal' />
+            <column-instance column='[value]' derivation='None' name='[none:value:nk]' pivot='key' type='nominal' />
           </datasource-dependencies>
           <aggregation value='true' />
         </view>
@@ -346,13 +328,13 @@
           <pane selection-relaxation-option='selection-relaxation-allow'>
             <view><breakdown value='auto' /></view>
             <mark class='Text' />
-            <encodings><text column='[federated.experiment_aa].[sum:control_mean:qk]' /><text column='[federated.experiment_aa].[sum:treatment_mean:qk]' /><text column='[federated.experiment_aa].[sum:p_value:qk]' /></encodings>
+            <encodings><text column='[federated.experiment_aa].[none:value:nk]' /></encodings>
           </pane>
         </panes>
-        <rows>[federated.experiment_aa].[none:metric:nk] / [federated.experiment_aa].[none:verdict:nk]</rows>
-        <cols></cols>
+        <rows>[federated.experiment_aa].[none:metric:nk]</rows>
+        <cols>[federated.experiment_aa].[none:stat:nk]</cols>
       </table>
-      <simple-id uuid='{5D73EC8A-C534-4CBF-A53E-A4979A633473}' />
+      <simple-id uuid='{5F962654-59FB-4823-9133-8C3DD07C4AE4}' />
     </worksheet>
     <worksheet name="Dataset SLAs">
       <layout-options><title><formatted-text><run bold='true'>Dataset SLAs</run><run fontsize='9' fontcolor='#6b7280'>&#10;Checked on every pipeline run; any breach fails the run.</run></formatted-text></title></layout-options>
@@ -384,7 +366,7 @@
         <rows>[federated.sla_status].[none:sla_type:nk] / [federated.sla_status].[none:description:nk] / [federated.sla_status].[none:target:nk] / [federated.sla_status].[none:status:nk]</rows>
         <cols></cols>
       </table>
-      <simple-id uuid='{8B3360E2-EBC9-4DF5-9E35-F4CB9CE820DD}' />
+      <simple-id uuid='{51C1E8C3-52AC-4656-84AA-121AA5234896}' />
     </worksheet>
   </worksheets>
   <dashboards>
@@ -400,21 +382,21 @@
           <zone h='23636' id='13' name="Questions Asked per Year" type-v2='visual' w='50000' x='0' y='40909' />
           <zone h='23636' id='14' name="Answered Rate per Year" type-v2='visual' w='50000' x='50000' y='40909' />
           <zone h='35455' id='15' name="Top Tags: Accept Rate" type-v2='visual' w='30000' x='0' y='64545' />
-          <zone h='35455' id='16' name="A/A Test: Experiment Pipeline Check" type-v2='visual' w='34286' x='30000' y='64545' />
+          <zone h='35455' id='16' name="A/A Experiment Check" type-v2='visual' w='34286' x='30000' y='64545' />
           <zone h='35455' id='17' name="Dataset SLAs" type-v2='visual' w='35714' x='64286' y='64545' />
         </zone>
       </zones>
-      <simple-id uuid='{73FB3D8C-C124-49BE-8C98-D1C2DC4345D8}' />
+      <simple-id uuid='{0C04025A-9D70-4948-BD5E-34B6198CBED1}' />
     </dashboard>
   </dashboards>
   <windows>
-    <window class='worksheet' hidden='true' name="Monthly Active Contributors"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{0BF410C1-7DB0-446A-9672-562E1158536E}' /></window>
-    <window class='worksheet' hidden='true' name="Retention by Cohort Era"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{6AEC7839-BA80-4714-8741-8E73D9A7ABB0}' /></window>
-    <window class='worksheet' hidden='true' name="Questions Asked per Year"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{BE12C267-5FF9-46E6-A281-A1CF16B18CBB}' /></window>
-    <window class='worksheet' hidden='true' name="Answered Rate per Year"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{FA71DEAE-A400-430A-BD93-70973060F514}' /></window>
-    <window class='worksheet' hidden='true' name="Top Tags: Accept Rate"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{D6244A8A-0262-47A0-869C-08B0A643F566}' /></window>
-    <window class='worksheet' hidden='true' name="A/A Test: Experiment Pipeline Check"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{CC0C3AE9-C02C-4283-8D30-0909DF0E1090}' /></window>
-    <window class='worksheet' hidden='true' name="Dataset SLAs"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{9CCA09B6-9BA9-4524-A486-D56770041975}' /></window>
-    <window class='dashboard' maximized='true' name='Q&amp;A Community Health'><viewpoints><viewpoint name="Monthly Active Contributors" /><viewpoint name="Retention by Cohort Era" /><viewpoint name="Questions Asked per Year" /><viewpoint name="Answered Rate per Year" /><viewpoint name="Top Tags: Accept Rate" /><viewpoint name="A/A Test: Experiment Pipeline Check" /><viewpoint name="Dataset SLAs" /></viewpoints><active id='-1' /><simple-id uuid='{6EDF01B8-A881-4A9D-8524-22BD10804504}' /></window>
+    <window class='worksheet' hidden='true' name="Monthly Active Contributors"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{473BBCE7-9B48-4D54-A678-830E16672317}' /></window>
+    <window class='worksheet' hidden='true' name="Retention by Cohort Era"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{18EAE771-3868-4BA2-9974-1DD7295696B6}' /></window>
+    <window class='worksheet' hidden='true' name="Questions Asked per Year"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{C8FAC0E6-D3B6-4178-B32E-3594968FF46F}' /></window>
+    <window class='worksheet' hidden='true' name="Answered Rate per Year"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{5D06EF65-53A3-40D8-9086-6E4DCC47A4E2}' /></window>
+    <window class='worksheet' hidden='true' name="Top Tags: Accept Rate"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{04BFE3BF-CB6C-4F8A-84AC-F9C5871A6C82}' /></window>
+    <window class='worksheet' hidden='true' name="A/A Experiment Check"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{A8D81215-27D5-42AF-937F-0F012CEB75D9}' /></window>
+    <window class='worksheet' hidden='true' name="Dataset SLAs"><cards><edge name='left'><strip size='160'><card type='pages' /><card type='filters' /><card type='marks' /></strip></edge><edge name='top'><strip size='31'><card type='columns' /></strip><strip size='31'><card type='rows' /></strip><strip size='31'><card type='title' /></strip></edge></cards><simple-id uuid='{8A9DE9C7-89D2-44E9-84A1-45CF093B01A8}' /></window>
+    <window class='dashboard' maximized='true' name='Q&amp;A Community Health'><viewpoints><viewpoint name="Monthly Active Contributors" /><viewpoint name="Retention by Cohort Era" /><viewpoint name="Questions Asked per Year" /><viewpoint name="Answered Rate per Year" /><viewpoint name="Top Tags: Accept Rate" /><viewpoint name="A/A Experiment Check" /><viewpoint name="Dataset SLAs" /></viewpoints><active id='-1' /><simple-id uuid='{ABC85DCF-004C-438E-8737-AE590537DCC4}' /></window>
   </windows>
 </workbook>

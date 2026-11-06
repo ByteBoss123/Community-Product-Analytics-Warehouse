@@ -41,13 +41,19 @@ EXTRACTS = {
         SELECT tag, questions, answer_rate, accept_rate, median_hours_to_first_answer
         FROM a.agg_tag_health ORDER BY questions DESC LIMIT 15""",
     "experiment_aa": """
-        SELECT CASE metric WHEN 'activated_28d' THEN '1. Activated in 28 days (primary)'
-                           WHEN 'asked_28d' THEN '2. Asked a question in 28 days'
-                           WHEN 'answered_28d' THEN '3. Answered in 28 days'
-                           ELSE '4. Actions in 28 days (guardrail)' END AS metric,
-               control_n, treatment_n, control_mean, treatment_mean, delta, ci_low, ci_high, p_value,
-               CASE WHEN significant THEN 'Significant' ELSE 'No difference' END AS verdict
-        FROM a.agg_experiment_results ORDER BY 1""",
+        WITH r AS (
+          SELECT CASE metric WHEN 'activated_28d' THEN '1. Activated in 28d (primary)'
+                             WHEN 'asked_28d' THEN '2. Asked in 28d'
+                             WHEN 'answered_28d' THEN '3. Answered in 28d'
+                             ELSE '4. Actions in 28d (guardrail)' END AS metric, *
+          FROM a.agg_experiment_results)
+        SELECT metric, '1. Control' AS stat,
+               CASE WHEN metric_type = 'binary' THEN printf('%.2f%%', 100 * control_mean) ELSE printf('%.3f', control_mean) END AS value
+        FROM r
+        UNION ALL SELECT metric, '2. Treatment',
+               CASE WHEN metric_type = 'binary' THEN printf('%.2f%%', 100 * treatment_mean) ELSE printf('%.3f', treatment_mean) END FROM r
+        UNION ALL SELECT metric, '3. p-value', printf('%.2f', p_value) FROM r
+        ORDER BY 1, 2""",
     "sla_status": """
         SELECT sla_type, dataset, description, observed, comparator || ' ' || CAST(threshold AS VARCHAR) AS target,
                CASE WHEN passed THEN 'Met' ELSE 'Breach' END AS status
@@ -79,9 +85,7 @@ COLS = {
                                "median_hours_to_first_answer": MEA_R, "coverage": DIM_S},
     "tag_health": {"tag": DIM_S, "questions": MEA_I, "answer_rate": MEA_R, "accept_rate": MEA_R,
                    "median_hours_to_first_answer": MEA_R},
-    "experiment_aa": {"metric": DIM_S, "control_n": MEA_I, "treatment_n": MEA_I, "control_mean": MEA_R,
-                      "treatment_mean": MEA_R, "delta": MEA_R, "ci_low": MEA_R, "ci_high": MEA_R,
-                      "p_value": MEA_R, "verdict": DIM_S},
+    "experiment_aa": {"metric": DIM_S, "stat": DIM_S, "value": DIM_S},
     "sla_status": {"sla_type": DIM_S, "dataset": DIM_S, "description": DIM_S, "observed": MEA_R,
                    "target": DIM_S, "status": DIM_S},
     "kpis": {"sort_order": MEA_I, "metric": DIM_S, "value": DIM_S},
@@ -95,7 +99,7 @@ CAPTIONS = {"month_start": "Month", "asked_year": "Year asked", "contributors": 
             "description": "Check", "target": "Target", "status": "Status", "observed": "Observed",
             "metric": "Metric", "value": "Value", "accepted_rate": "Accepted rate",
             "control_mean": "Control", "treatment_mean": "Treatment", "delta": "Delta",
-            "ci_low": "95% CI low", "ci_high": "95% CI high", "p_value": "p-value", "verdict": "Verdict"}
+            "ci_low": "95% CI low", "ci_high": "95% CI high", "p_value": "p-value", "verdict": "Verdict", "stat": "Group"}
 PERCENT = {"retention_rate", "answered_rate", "accept_rate", "answer_rate", "accepted_rate"}
 
 LAKE_TABLES = {"agg_monthly_active": "analytics", "agg_retention_cohort": "analytics",
@@ -259,13 +263,11 @@ def build_sheets():
           encodings=[("text", ("accept_rate", "Sum", "qk")), ("tooltip", ("questions", "Sum", "qk"))],
           sort=(("tag", "None", "nk"), ("accept_rate", "Sum", "qk"), "DESC"),
           subtitle="15 highest-volume tags, mature questions only.")
-    sheet("A/A Test: Experiment Pipeline Check", "experiment_aa",
-          [("metric", "None", "nk"), ("verdict", "None", "nk"), ("control_mean", "Sum", "qk"),
-           ("treatment_mean", "Sum", "qk"), ("p_value", "Sum", "qk")],
-          rows=[("metric", "None", "nk"), ("verdict", "None", "nk")], cols=[], mark="Text",
-          encodings=[("text", ("control_mean", "Sum", "qk")), ("text", ("treatment_mean", "Sum", "qk")),
-                     ("text", ("p_value", "Sum", "qk"))],
-          subtitle="24,587 real 2023 sign-ups, hash-split 50/50, no treatment. Text = control | treatment | p-value.")
+    sheet("A/A Experiment Check", "experiment_aa",
+          [("metric", "None", "nk"), ("stat", "None", "nk"), ("value", "None", "nk")],
+          rows=[("metric", "None", "nk")], cols=[("stat", "None", "nk")], mark="Text",
+          encodings=[("text", ("value", "None", "nk"))],
+          subtitle="24,587 real 2023 sign-ups, hash-split 50/50, no treatment. No metric differs.")
     sheet("Dataset SLAs", "sla_status",
           [("sla_type", "None", "nk"), ("description", "None", "nk"), ("target", "None", "nk"),
            ("status", "None", "nk"), ("observed", "Sum", "qk")],
@@ -287,7 +289,7 @@ def dashboard():
     layout = [
         (150, 300, [("Monthly Active Contributors", 700), ("Retention by Cohort Era", 700)]),
         (450, 260, [("Questions Asked per Year", 700), ("Answered Rate per Year", 700)]),
-        (710, 390, [("Top Tags: Accept Rate", 420), ("A/A Test: Experiment Pipeline Check", 480), ("Dataset SLAs", 500)]),
+        (710, 390, [("Top Tags: Accept Rate", 420), ("A/A Experiment Check", 480), ("Dataset SLAs", 500)]),
     ]
     for y, h, cells in layout:
         x = 0
