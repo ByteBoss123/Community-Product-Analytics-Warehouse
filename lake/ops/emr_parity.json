@@ -1,0 +1,57 @@
+{
+ "emr_application": "00ga3sf0a5ifhd09 (EMR Serverless, emr-7.5.0, Spark 3.5)",
+ "region": "us-east-1",
+ "runs": {
+  "transform_v1": {
+   "job": "00ga3sf2j366e80b",
+   "seconds": 83,
+   "vcpu_hours": 0.173,
+   "memory_gb_hours": 0.605
+  },
+  "fingerprint_v1": {
+   "job": "00ga3shfh5ku9g0b",
+   "seconds": 55,
+   "vcpu_hours": 0.133,
+   "memory_gb_hours": 0.467
+  },
+  "transform_v2": {
+   "job": "00ga3sl23ani0o0b",
+   "seconds": 106,
+   "vcpu_hours": 0.221,
+   "memory_gb_hours": 0.774
+  },
+  "fingerprint_v2": {
+   "job": "00ga3sog7ri4k80b",
+   "seconds": 59,
+   "vcpu_hours": 0.133,
+   "memory_gb_hours": 0.467
+  }
+ },
+ "v1_result": "20 of 21 tables identical; agg_question_funnel_yearly differed (percentile_approx is partition-dependent)",
+ "fix": "percentile_approx -> exact percentile in agg_question_funnel_yearly and agg_tag_health",
+ "v2_result": "21 of 21 tables identical (row count + sum of xxhash64 over all columns)",
+ "rows_compared": 9527413,
+ "emr": {
+  "analytics.agg_activation": "-7495494414183378112",
+  "analytics.agg_monthly_active": "5953118320850615649",
+  "analytics.agg_question_funnel_yearly": "-167276307304911799",
+  "analytics.agg_retention_cohort": "-8629615440187012733",
+  "analytics.agg_tag_health": "-4707510679318871835",
+  "analytics.agg_weekly_active": "7270719136908324218",
+  "analytics.bridge_question_tag": "7826053568394297110",
+  "analytics.dim_post": "-4998385686976669943",
+  "analytics.dim_user": "-6507859798156185467",
+  "analytics.fct_post_votes_daily": "5692704553390563695",
+  "analytics.fct_question_outcomes": "3264109352320573247",
+  "analytics.fct_user_events": "2150166744387432104",
+  "quarantine.votes_orphan_post": "3975411281516120440",
+  "restricted.user_profile": "-4209555817963648196",
+  "stg.comments": "4234469483943598500",
+  "stg.post_edits": "5617390101323705863",
+  "stg.post_tags": "7826053568394297110",
+  "stg.posts": "-3924995290837205599",
+  "stg.snapshot": "-8163384797325506317",
+  "stg.users": "-3276442456067842509",
+  "stg.votes": "8716143031556272878"
+ }
+}

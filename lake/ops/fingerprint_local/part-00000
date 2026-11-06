@@ -1,0 +1,86 @@
+{
+ "analytics.agg_activation": {
+  "hash_sum": "-7495494414183378112",
+  "rows": 165
+ },
+ "analytics.agg_monthly_active": {
+  "hash_sum": "5953118320850615649",
+  "rows": 168
+ },
+ "analytics.agg_question_funnel_yearly": {
+  "hash_sum": "-167276307304911799",
+  "rows": 16
+ },
+ "analytics.agg_retention_cohort": {
+  "hash_sum": "-8629615440187012733",
+  "rows": 2093
+ },
+ "analytics.agg_tag_health": {
+  "hash_sum": "-4707510679318871835",
+  "rows": 1612
+ },
+ "analytics.agg_weekly_active": {
+  "hash_sum": "7270719136908324218",
+  "rows": 720
+ },
+ "analytics.bridge_question_tag": {
+  "hash_sum": "7826053568394297110",
+  "rows": 662394
+ },
+ "analytics.dim_post": {
+  "hash_sum": "-4998385686976669943",
+  "rows": 425735
+ },
+ "analytics.dim_user": {
+  "hash_sum": "-6507859798156185467",
+  "rows": 345753
+ },
+ "analytics.fct_post_votes_daily": {
+  "hash_sum": "5692704553390563695",
+  "rows": 1295816
+ },
+ "analytics.fct_question_outcomes": {
+  "hash_sum": "3264109352320573247",
+  "rows": 213761
+ },
+ "analytics.fct_user_events": {
+  "hash_sum": "2150166744387432104",
+  "rows": 1751986
+ },
+ "quarantine.votes_orphan_post": {
+  "hash_sum": "3975411281516120440",
+  "rows": 148072
+ },
+ "restricted.user_profile": {
+  "hash_sum": "-4209555817963648196",
+  "rows": 345753
+ },
+ "stg.comments": {
+  "hash_sum": "4234469483943598500",
+  "rows": 819648
+ },
+ "stg.post_edits": {
+  "hash_sum": "5617390101323705863",
+  "rows": 480685
+ },
+ "stg.post_tags": {
+  "hash_sum": "7826053568394297110",
+  "rows": 662394
+ },
+ "stg.posts": {
+  "hash_sum": "-3924995290837205599",
+  "rows": 425735
+ },
+ "stg.snapshot": {
+  "hash_sum": "-8163384797325506317",
+  "rows": 1
+ },
+ "stg.users": {
+  "hash_sum": "-3276442456067842509",
+  "rows": 345753
+ },
+ "stg.votes": {
+  "hash_sum": "8716143031556272878",
+  "rows": 1599153
+ }
+}

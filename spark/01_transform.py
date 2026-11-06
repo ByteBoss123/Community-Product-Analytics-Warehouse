@@ -7,24 +7,31 @@ Layout (lake/):
   analytics/fct_user_events/        partitioned by event_year
   analytics/<dims and marts>/
 """
+import os
 import sys
 from pathlib import Path
 
 from pyspark.sql import SparkSession
 
-LAKE = Path(__file__).resolve().parents[1] / "lake"
+# Local path by default; set CPA_LAKE=s3://bucket/lake to run against S3 (e.g. on EMR Serverless).
+LAKE = os.environ.get("CPA_LAKE", str(Path(__file__).resolve().parents[1] / "lake")).rstrip("/")
+
+
+def lake_path(*parts):
+    return "/".join([LAKE, *parts])
 SALT = "cpa-salt-v1:"  # production: read from a secrets manager
 
 
 def spark_session():
-    return (SparkSession.builder.appName("community-product-analytics")
-            .master("local[*]").config("spark.sql.shuffle.partitions", "16")
-            .config("spark.sql.session.timeZone", "UTC")
-            .config("spark.driver.memory", "4g").getOrCreate())
+    b = SparkSession.builder.appName("community-product-analytics")
+    if not os.environ.get("CPA_CLUSTER"):  # on a cluster the master comes from spark-submit
+        b = b.master("local[*]").config("spark.driver.memory", "4g")
+    return (b.config("spark.sql.shuffle.partitions", "16")
+            .config("spark.sql.session.timeZone", "UTC").getOrCreate())
 
 
 def view(spark, layer, name):
-    spark.read.parquet(str(LAKE / layer / (name if layer != "raw" else f"{name}.parquet"))).createOrReplaceTempView(
+    spark.read.parquet(lake_path(layer, name if layer != "raw" else f"{name}.parquet")).createOrReplaceTempView(
         f"{layer}_{name}")
 
 
@@ -33,7 +40,7 @@ def save(spark, sql, layer, name, partition_by=None):
     w = df.write.mode("overwrite")
     if partition_by:
         w = w.partitionBy(partition_by)
-    w.parquet(str(LAKE / layer / name))
+    w.parquet(lake_path(layer, name))
     view(spark, layer, name)
     return df
 
@@ -218,7 +225,7 @@ def main():
                sum(CASE WHEN answers > 0 THEN 1 ELSE 0 END) AS answered,
                sum(CASE WHEN has_accepted_answer THEN 1 ELSE 0 END) AS accepted,
                sum(CASE WHEN is_closed THEN 1 ELSE 0 END) AS closed,
-               round(percentile_approx(hours_to_first_answer, 0.5, 10000), 2) AS median_hours_to_first_answer,
+               round(percentile(hours_to_first_answer, 0.5), 2) AS median_hours_to_first_answer,
                bool_and(is_mature) AS all_mature
         FROM analytics_fct_question_outcomes GROUP BY 1 ORDER BY 1""", "analytics", "agg_question_funnel_yearly")
 
@@ -226,7 +233,7 @@ def main():
         SELECT t.tag, count(*) AS questions,
                round(avg(CASE WHEN o.answers > 0 THEN 1 ELSE 0 END), 4) AS answer_rate,
                round(avg(CASE WHEN o.has_accepted_answer THEN 1 ELSE 0 END), 4) AS accept_rate,
-               round(percentile_approx(o.hours_to_first_answer, 0.5, 10000), 2) AS median_hours_to_first_answer
+               round(percentile(o.hours_to_first_answer, 0.5), 2) AS median_hours_to_first_answer
         FROM analytics_bridge_question_tag t JOIN analytics_fct_question_outcomes o ON o.question_id = t.post_id
         WHERE o.is_mature GROUP BY 1 ORDER BY questions DESC""", "analytics", "agg_tag_health")
 

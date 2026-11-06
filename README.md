@@ -21,6 +21,7 @@ spark/01_transform.py     Spark SQL: stg -> quarantine / restricted / analytics 
 spark/02_sla.py           17 dataset SLAs, results appended to lake/ops/sla_results, breach exits non-zero
 spark/03_experiment_aa.py A/A validation of the experiment metrics pipeline
 spark/04_ingest_logs.py   Spark ingest of the logging sink, reconciled against the warehouse
+spark/05_fingerprint.py   order-independent table fingerprints for cross-environment parity (local vs EMR)
 logging_client/           v2 event contracts (JSON Schema), validating logger with dead letter, real-data replay
 src/build_tableau.py      Tableau extracts + .twb from the lake
 ```
@@ -32,6 +33,14 @@ Results (all from the lake):
   month-12: 4.7%, 2.7%, 1.8%.
 - Share of questions answered: 99.1% (2010), 70.1% (2016), 46.6% (2023).
 - 148,072 votes reference deleted posts and are quarantined, not dropped.
+
+**Runs on a cluster, with proof of parity.** The same transform ran on AWS EMR Serverless
+(emr-7.5.0, Spark 3.5, S3 lake, us-east-1) in 106 s for 0.22 vCPU-hours. `spark/05_fingerprint.py`
+hashes every table (row count + sum of xxhash64 over all columns) in both environments. The first
+comparison found 20 of 21 tables identical: `agg_question_funnel_yearly` differed because
+`percentile_approx` depends on partitioning, so a cluster and a laptop gave different medians. Both
+medians now use exact `percentile`, and the rerun matched on all 21 tables (9,527,413 rows).
+Job ids, timings and both fingerprints: `lake/ops/emr_parity.json`.
 
 **Event logging, implemented.** A validating logging client (JSON Schema contracts, dedupe,
 dead-letter queue) replayed all 3,279,779 historical actions: 1,751,986 accepted and reconciled
@@ -49,7 +58,9 @@ first answer predated the question. All 25 are merge destinations (PostHistoryTy
 answers from an older duplicate. Time-to-first-answer now counts only answers posted after the question,
 merges are flagged, and a new SLA fails if an early answer appears on a non-merged question.
 
-Run: `python3 spark/00_land_raw.py <dump_dir> && python3 spark/01_transform.py && python3 spark/02_sla.py && python3 spark/03_experiment_aa.py`
+On EMR Serverless: set `CPA_LAKE=s3://<bucket>/lake` and `CPA_CLUSTER=1` (see `lake/ops/emr_parity.json`).
+
+Run locally: `python3 spark/00_land_raw.py <dump_dir> && python3 spark/01_transform.py && python3 spark/02_sla.py && python3 spark/03_experiment_aa.py`
 
 ## v1: 19-week launch sample in DuckDB (`src/`, `sql/`, `dags/`)
 
